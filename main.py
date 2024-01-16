@@ -1,15 +1,22 @@
 from bokeh.plotting import figure, output_file, show
+import pandas
 
-x = [1, 2, 3, 4, 5]
-y = [4, 5, 6, 7, 8]
+# Read in CSV
+df = pandas.read_csv('cars.csv')
+
+car = df['Car']
+hp = df['Horsepower']
+
 
 output_file("index.html")
 
 # Add plot
 p = figure(
-    title="Simple Bokeh plot",
-    x_axis_label="x",
-    y_axis_label="y",
+    y_range=car,
+    plot_width=800,
+    plot_height=600,
+    title="Cars with Top Horsepower",
+    x_axis_label="Horsepower",
 )
 
 # Render glyph

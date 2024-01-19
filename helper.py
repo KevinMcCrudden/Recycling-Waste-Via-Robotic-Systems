@@ -19,8 +19,3 @@ def convert_to_month_names(month_list):
     month_names = [month_mapping.get(month, 'Invalid Month') for month in month_list]
 
     return month_names
-
-# Example usage:
-input_list = [3, 7, 12]
-result = convert_to_month_names(input_list)
-print(result)

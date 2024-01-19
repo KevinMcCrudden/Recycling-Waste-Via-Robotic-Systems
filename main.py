@@ -2,9 +2,11 @@ from bokeh.plotting import figure, show
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from helper import Tools
 import pandas
+import helper as Helper
 
+# Create an instance of the helper class as Helper, using Tools to call it
+Tools = Helper.MyClass()
 
 # Read in CSV
 df = pandas.read_csv('22-23_WM_Recycling_Data.csv')

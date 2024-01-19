@@ -1,6 +1,11 @@
-def convert_to_month_names(month_list):
-    # Define a dictionary to map integers to month names
-    month_mapping = {
+class MyClass:
+    def __init__(self):
+        # Constructor (initialize your class attributes here)
+        pass
+
+    def convert_to_month_names(self, month_list):
+        # Define a dictionary to map integers to month names
+        month_mapping = {
         1: 'January',
         2: 'February',
         3: 'March',
@@ -15,7 +20,10 @@ def convert_to_month_names(month_list):
         12: 'December'
     }
 
-    # Convert each integer to its corresponding month name
-    month_names = [month_mapping.get(month, 'Invalid Month') for month in month_list]
+        # Convert each integer to its corresponding month name
+        month_names = [month_mapping.get(month, 'Invalid Month') for month in month_list]
 
-    return month_names
+        return month_names
+
+if __name__ == "__main__":
+    pass

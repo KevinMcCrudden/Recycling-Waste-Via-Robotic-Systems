@@ -27,21 +27,22 @@ class MyClass:
         }
 
         # Convert 'MONTH' column to its corresponding month names
-        df['Month'] = df['MONTH'].apply(lambda month: month_mapping.get(month, 'Invalid Month'))
+        df['MONTH_STRING'] = df['MONTH'].apply(lambda month: month_mapping.get(month, 'Invalid Month'))
 
         # Save the updated DataFrame to a new CSV file
         df.to_csv(csv_file, index=False)
     
     def sorter(self, csv_file):
+        # Sorts the data by the YEAR and MONTH_STRING columns
         # Read the input CSV file
         df = pd.read_csv(csv_file)
 
         # Converts 'YEAR' and 'MONTH' columns to strings to ensure correct sorting
         df['YEAR'] = df['YEAR'].astype(str)
-        df['MONTH'] = df['MONTH'].astype(str)
+        df['MONTH_STRING'] = df['MONTH_STRING'].astype(str)
 
         # Create a new column 'YearMonth' by concatenating 'Year' and 'Month'
-        df['YearMonth'] = df['Year'] + df['Month']
+        df['YearMonth'] = df['YEAR'] + df['MONTH_STRING']
 
         # Sort the DataFrame by 'YearMonth'
         df.sort_values(by='YearMonth', inplace=True)

@@ -18,6 +18,9 @@ Tools = Helper.MyClass()
 # Also converts the list of numbers to a list of strings as Bokeh does not support integers
 Tools.convert_to_month_names(csv_file)
 
+# Sorts the data by year and month
+Tools.sorter(csv_file)
+
 # # Assings the value of the column 'TONNAGE' to the variable 'Tons'
 # Tons = df['TONNAGE']
 

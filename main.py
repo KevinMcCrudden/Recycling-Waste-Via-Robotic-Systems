@@ -2,31 +2,23 @@ from bokeh.plotting import figure, show
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-import pandas
+import pandas as pd
 import helper as Helper
 
+# Creates a variable to hold the csv file name
+csv_file = 'Whatever the file name is.csv'
+
 # Read the CSV file
-df = pandas.read_csv('22-23_WM_Recycling_Data.csv')
-
-# Assuming your CSV columns are named 'MONTH' and 'YEAR'
-# Convert 'YEAR' and 'MONTH' columns to strings to ensure correct sorting
-df['YEAR'] = df['YEAR'].astype(str)
-df['MONTH'] = df['MONTH'].astype(str)
-
-# Create a new column 'YearMonth' by concatenating 'Year' and 'Month'
-df['YearMonth'] = df['YEAR'] + df['MONTH']
-
-# Sort the DataFrame by 'YearMonth'
-df.sort_values(by='YearMonth', inplace=True)
-
-# Drop the temporary 'YearMonth' column if you don't need it anymore
-df.drop('YearMonth', axis=1, inplace=True)
-
-# Save the sorted DataFrame back to a CSV file
-df.to_csv('test.csv', index=False)
+df = pd.read_csv(csv_file)
 
 # Create an instance of the helper class as Helper, using Tools to call it
 Tools = Helper.MyClass()
+
+# Assings the value of the column 'TONNAGE' to the variable 'Tons'
+Tons = df['TONNAGE']
+
+# Read the CSV file after it was modified by the helper class
+df = pd.read_csv(csv_file)
 
 # Assings the value of the column 'MONTH' to the variable 'Month'
 # Also converts the list of numbers to a list of strings as Bokeh does not support integers

@@ -32,10 +32,26 @@ class MyClass:
         # Save the updated DataFrame to a new CSV file
         df.to_csv(csv_file, index=False)
     
-    def sorter(self, month_list):
-        # Converts 'YEAR' and 'MONTH' columns to strings to ensure correct sorting
-        pass
+    def sorter(self, csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(csv_file)
 
+        # Converts 'YEAR' and 'MONTH' columns to strings to ensure correct sorting
+        df['YEAR'] = df['YEAR'].astype(str)
+        df['MONTH'] = df['MONTH'].astype(str)
+
+        # Create a new column 'YearMonth' by concatenating 'Year' and 'Month'
+        df['YearMonth'] = df['Year'] + df['Month']
+
+        # Sort the DataFrame by 'YearMonth'
+        df.sort_values(by='YearMonth', inplace=True)
+
+        # Drop the temporary 'YearMonth' column if you don't need it anymore
+        df.drop('YearMonth', axis=1, inplace=True)
+
+        # Save the sorted DataFrame back to a CSV file
+        df.to_csv(csv_file, index=False)
+            
     def monthly_totals(self, csv):
         pass
 

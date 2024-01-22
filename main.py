@@ -8,8 +8,8 @@ import helper as Helper
 # Read the CSV file
 df = pandas.read_csv('22-23_WM_Recycling_Data.csv')
 
-# Assuming your CSV columns are named 'Month' and 'Year'
-# Convert 'Year' and 'Month' columns to strings to ensure correct sorting
+# Assuming your CSV columns are named 'MONTH' and 'YEAR'
+# Convert 'YEAR' and 'MONTH' columns to strings to ensure correct sorting
 df['YEAR'] = df['YEAR'].astype(str)
 df['MONTH'] = df['MONTH'].astype(str)
 

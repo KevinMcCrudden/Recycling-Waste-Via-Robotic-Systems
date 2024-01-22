@@ -24,6 +24,9 @@ class MyClass:
         month_names = [month_mapping.get(month, 'Invalid Month') for month in month_list]
 
         return month_names
+    
+    def sorter(self, month_list):
+        pass
 
 if __name__ == "__main__":
     pass

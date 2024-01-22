@@ -37,15 +37,24 @@ class MyClass:
         # Read the input CSV file
         df = pd.read_csv(csv_file)
 
-        # Converts 'YEAR' and 'MONTH' columns to strings to ensure correct sorting
+        # Assuming CSV columns are named 'MONTH_STRING' and 'YEAR'
+        # Convert 'Year' and 'Month' columns to strings to ensure correct sorting
         df['YEAR'] = df['YEAR'].astype(str)
-        df['MONTH_STRING'] = df['MONTH_STRING'].astype(str)
+
+        # Define the natural order of months
+        month_order = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ]
+
+        # Convert 'Month' column to a categorical data type with custom sort order
+        df['MONTH_STRING'] = pd.Categorical(df['MONTH_STRING'], categories=month_order, ordered=True)
 
         # Create a new column 'YearMonth' by concatenating 'Year' and 'Month'
-        df['YearMonth'] = df['YEAR'] + df['MONTH_STRING']
+        df['YearMonth'] = df['YEAR'] + df['MONTH_STRING'].astype(str)
 
-        # Sort the DataFrame by 'YearMonth'
-        df.sort_values(by='YearMonth', inplace=True)
+        # Sort the DataFrame by 'Year' and 'Month'
+        df.sort_values(by=['YEAR', 'MONTH'], inplace=True)
 
         # Drop the temporary 'YearMonth' column if you don't need it anymore
         df.drop('YearMonth', axis=1, inplace=True)

@@ -21,6 +21,9 @@ Tools.convert_to_month_names(csv_file)
 # Sorts the data by year and month
 Tools.sorter(csv_file)
 
+# Combines the 'CUSTOMER_NM' column with the 'MONTH_STRING' column
+Tools.monthly_totals(csv_file)
+
 # # Assings the value of the column 'TONNAGE' to the variable 'Tons'
 # Tons = df['TONNAGE']
 

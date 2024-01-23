@@ -38,7 +38,7 @@ class MyClass:
         df = pd.read_csv(csv_file)
 
         # Assuming CSV columns are named 'MONTH_STRING' and 'YEAR'
-        # Convert 'Year' and 'Month' columns to strings to ensure correct sorting
+        # Convert 'Year' column to strings to ensure correct sorting
         df['YEAR'] = df['YEAR'].astype(str)
 
         # Define the natural order of months
@@ -62,8 +62,17 @@ class MyClass:
         # Save the sorted DataFrame back to a CSV file
         df.to_csv(csv_file, index=False)
             
-    def monthly_totals(self, csv):
-        pass
+    def monthly_totals(self, csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(csv_file)
+
+        # Removes the 'WORCESTER POLYTECH text from the 'CUSTOMER_NM' column
+        df['CUSTOMER_NM_Modified'] = df['CUSTOMER_NM'].str.replace('WORCESTER POLYTECH', '')
+
+        # Combines the 'CUSTOMER_NM' and 'MONTH_STRING' columns into one column
+        df['CUSTOMER_NM+MONTH_STRING'] = df['CUSTOMER_NM'] + ' - ' + df['MONTH_STRING'].astype(str)
+
+        df.to_csv(csv_file, index=False)
 
 if __name__ == "__main__":
     pass

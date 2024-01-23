@@ -28,3 +28,25 @@ df.drop('YearMonth', axis=1, inplace=True)
 
 # Save the modified DataFrame back to a CSV file
 df.to_csv('modified_csv_file.csv', index=False)
+
+
+
+import pandas as pd
+
+# Load the CSV file into a DataFrame
+df = pd.read_csv(csv_file)
+
+# Combine columns and sum tonnage
+df['Combined_Column'] = df['CUSTOMER_NM+MONTH_STRING'] + ' - ' + df['TONNAGE'].astype(str)
+result_df = df.groupby('Combined_Column')['TONNAGE'].sum().reset_index()
+
+# Extract unique customers and months
+result_df['Customer'] = result_df['Combined_Column'].str.split(' - ').str[0]
+result_df['Month'] = result_df['Combined_Column'].str.split(' - ').str[1]
+
+# Select relevant columns
+result_df = result_df[['Customer', 'Month', 'TONNAGE']]
+
+# Display the result
+print(result_df)
+

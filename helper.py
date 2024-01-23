@@ -70,9 +70,12 @@ class MyClass:
         df['CUSTOMER_NM_Modified'] = df['CUSTOMER_NM'].str.replace('WORCESTER POLYTECH', '')
 
         # Combines the 'CUSTOMER_NM' and 'MONTH_STRING' columns into one column
-        df['CUSTOMER_NM+MONTH_STRING'] = df['CUSTOMER_NM'] + ' - ' + df['MONTH_STRING'].astype(str)
+        df['CUSTOMER_NM+MONTH_STRING'] = df['CUSTOMER_NM'] + ' - ' + df['MONTH_STRING'].astype(str) + ' - ' + df['YEAR'].astype(str)
 
         df.to_csv(csv_file, index=False)
+
+    def remove_duplicates(self, csv_file):
+        pass
 
 if __name__ == "__main__":
     pass

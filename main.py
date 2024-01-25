@@ -95,7 +95,7 @@ f1.xaxis.major_label_orientation ="vertical"
 f2.xaxis.major_label_orientation ="vertical"
 
 # Combining plots 
-p = row(f1,f2)
+plots = row([f1,f2], sizing_mode="stretch_both")
 
 # Show results
-show(p)
+show(plots)

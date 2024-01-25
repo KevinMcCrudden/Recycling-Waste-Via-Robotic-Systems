@@ -70,12 +70,23 @@ class MyClass:
         df['CUSTOMER_NM_Modified'] = df['CUSTOMER_NM'].str.replace('WORCESTER POLYTECH', '')
 
         # Combines the 'CUSTOMER_NM' and 'MONTH_STRING' columns into one column
-        df['CUSTOMER_NM+MONTH_STRING'] = df['CUSTOMER_NM'] + ' - ' + df['MONTH_STRING'].astype(str) + ' - ' + df['YEAR'].astype(str)
+        df['CUSTOMER_NM_Modified+MONTH_STRING'] = df['CUSTOMER_NM_Modified'] + ' - ' + df['MONTH_STRING'].astype(str) + ' - ' + df['YEAR'].astype(str)
 
+        # Save the updated DataFrame to a new CSV file
         df.to_csv(csv_file, index=False)
 
-    def remove_duplicates(self, csv_file):
-        pass
+    def remove_duplicates_sum(self, csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(csv_file)
+
+        # Combine columns to create a new column for grouping
+        df['Combined_Column'] = df['CUSTOMER_NM_Modified+MONTH_STRING']
+
+        # Group by the combined column and sum the TONNAGE
+        grouped_df = df.groupby(['Combined_Column'])['TONNAGE'].sum().reset_index()
+
+        # Save the result back to the original CSV file
+        grouped_df.to_csv(csv_file, index=False)
 
 if __name__ == "__main__":
     pass

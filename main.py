@@ -21,14 +21,17 @@ Tools.sorter(csv_file)
 # Combines the 'CUSTOMER_NM' column with the 'MONTH_STRING' column
 Tools.monthly_totals(csv_file)
 
+# Removes duplicate locations during the same month and totals the TONNAGE
+Tools.remove_duplicates_sum(csv_file)
+
 # Read the CSV file
 df = pd.read_csv(csv_file)
 
 # Assings the value of the column 'TONNAGE' to the variable 'Tons'
-Tons = df['TONNAGE']
+#Tons = df['TONNAGE']
 
 # Assings the value of the column 'CUSTOMER_NM+MONTH_STRING' to the variable 'Location_Date'
-Location_Date = df['CUSTOMER_NM+MONTH_STRING']
+#Location_Date = df['CUSTOMER_NM+MONTH_STRING']
 
 # # Add plot for orange cars
 # p = figure(

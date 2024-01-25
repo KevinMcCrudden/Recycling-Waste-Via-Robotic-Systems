@@ -95,6 +95,26 @@ class MyClass:
         new_file = raw_csv_file.replace('.csv', '_duplicates_sum.csv')
         grouped_df.to_csv(new_file, index=False)
         return new_file
+    
+    def create_yearly_files(self, raw_csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
+
+        # Extract the year from the 'Combined_Column' and convert it to integer
+        df['Year'] = df['Combined_Column'].str.extract(r'(\d{4})').astype(int)
+
+        # Split the DataFrame into two based on the 'Year' column
+        df_2022 = df[df['Year'] == 2022]
+        df_2023 = df[df['Year'] == 2023]
+
+        # Save the results to two new CSV files
+        file_2022 = raw_csv_file.replace('.csv', '_2022.csv')
+        file_2023 = raw_csv_file.replace('.csv', '_2023.csv')
+
+        df_2022.to_csv(file_2022, index=False)
+        df_2023.to_csv(file_2023, index=False)
+
+        return file_2022, file_2023
 
 if __name__ == "__main__":
     pass

@@ -24,35 +24,78 @@ raw_csv_file = Tools.monthly_totals(raw_csv_file)
 # Removes duplicate locations during the same month and totals the TONNAGE
 raw_csv_file = Tools.remove_duplicates_sum(raw_csv_file)
 
-# # Set the CSV file that was created by the helper class as a variable
-# output_csv_file = 'whatever_this_is.csv'
+# This splits the 2022 and 2023 years apart to graph them separately
+raw_csv_file = Tools.create_yearly_files(raw_csv_file)
 
-# # Read the CSV file that was created by the helper class
-# df = pd.read_csv(output_csv_file)
+# Set the CSV file for the 2022 year
+output_csv_file_2022 = '22-23_WM_Recycling_Data_converted_month_names_sorted_monthly_totals_duplicates_sum_2022.csv'
 
-# # Assings the value of the column 'TONNAGE' to the variable 'Tons'
-# Tons = df['TONNAGE']
+# Set the CSV file for the 2023 year
+output_csv_file_2023 = '22-23_WM_Recycling_Data_converted_month_names_sorted_monthly_totals_duplicates_sum_2023.csv'
 
-# # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year'
-# Location_Date_Year = df['Combined_Column']
+# Read the CSV file that was created by the helper class from 2022
+df_2022 = pd.read_csv(output_csv_file_2022)
 
-# # Add plot for orange cars
-# p = figure(
-#     title="22-23 WPI Recycling Data",
-#     x_axis_label="Months of the year",
-#     y_axis_label="Weight in Tons",
-#     x_range=Location_Date_Year,
-#     tools="pan,box_select,zoom_in,zoom_out,save,reset"
-# )
+# Read the CSV file that was created by the helper class from 2023
+df_2023 = pd.read_csv(output_csv_file_2023)
 
-# # Render glyph for orange cars
-# p.vbar(
-#     x=Location_Date_Year,
-#     top=Tons,
-#     width=0.9,
-#     fill_alpha=0.5,
-#     line_color='green',
-# )
+# Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
+Tons_2022 = df_2022['TONNAGE']
 
-# # Show results
-# show(p)
+# Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
+Location_Date_Year_2022 = df_2022['Combined_Column']
+
+# Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
+Tons_2023 = df_2023['TONNAGE']
+
+# Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
+Location_Date_Year_2023 = df_2023['Combined_Column']
+
+# Add plot for 2022 year
+f1 = figure(
+    title="22 WPI Recycling Data",
+    x_axis_label="Months of the year",
+    y_axis_label="Weight in Tons",
+    x_range=Location_Date_Year_2022,
+    tools="pan,box_select,zoom_in,zoom_out,save,reset",
+    sizing_mode="stretch_both",
+    
+)
+
+# Render glyph for 2022 year
+f1.vbar(
+    x=Location_Date_Year_2022,
+    top=Tons_2022,
+    fill_alpha=0.5,
+    line_color='green',
+)
+
+# Add plot for 2023 year
+f2 = figure(
+    title="23 WPI Recycling Data",
+    x_axis_label="Months of the year",
+    y_axis_label="Weight in Tons",
+    x_range=Location_Date_Year_2023,
+    tools="pan,box_select,zoom_in,zoom_out,save,reset",
+    sizing_mode="stretch_both",
+    
+)
+
+# Render glyph for 2023 year
+f2.vbar(
+    x=Location_Date_Year_2023,
+    top=Tons_2023,
+    fill_alpha=0.5,
+    line_color='green',
+)
+
+
+# Rotate the x-axis labels
+f1.xaxis.major_label_orientation ="vertical"
+f2.xaxis.major_label_orientation ="vertical"
+
+# Combining plots 
+p = row(f1,f2)
+
+# Show results
+show(p)

@@ -6,45 +6,48 @@ import pandas as pd
 import helper as Helper
 
 # Creates a variable to hold the csv file name
-csv_file = 'Testing.csv'
+raw_csv_file = '22-23_WM_Recycling_Data.csv'
 
 # Create an instance of the helper class as Helper, using Tools to call it
 Tools = Helper.MyClass()
 
 # Assings the value of the column 'MONTH' to the variable 'Month'
 # Also converts the list of numbers to a list of strings as Bokeh does not support integers
-Tools.convert_to_month_names(csv_file)
+raw_csv_file = Tools.convert_to_month_names(raw_csv_file)
 
 # Sorts the data by year and month
-Tools.sorter(csv_file)
+raw_csv_file = Tools.sorter(raw_csv_file)
 
 # Combines the 'CUSTOMER_NM' column with the 'MONTH_STRING' column
-Tools.monthly_totals(csv_file)
+raw_csv_file = Tools.monthly_totals(raw_csv_file)
 
 # Removes duplicate locations during the same month and totals the TONNAGE
-Tools.remove_duplicates_sum(csv_file)
+raw_csv_file = Tools.remove_duplicates_sum(raw_csv_file)
 
-# Read the CSV file
-df = pd.read_csv(csv_file)
+# # Set the CSV file that was created by the helper class as a variable
+# output_csv_file = 'whatever_this_is.csv'
 
-# Assings the value of the column 'TONNAGE' to the variable 'Tons'
-#Tons = df['TONNAGE']
+# # Read the CSV file that was created by the helper class
+# df = pd.read_csv(output_csv_file)
 
-# Assings the value of the column 'CUSTOMER_NM+MONTH_STRING' to the variable 'Location_Date'
-#Location_Date = df['CUSTOMER_NM+MONTH_STRING']
+# # Assings the value of the column 'TONNAGE' to the variable 'Tons'
+# Tons = df['TONNAGE']
+
+# # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year'
+# Location_Date_Year = df['Combined_Column']
 
 # # Add plot for orange cars
 # p = figure(
 #     title="22-23 WPI Recycling Data",
 #     x_axis_label="Months of the year",
 #     y_axis_label="Weight in Tons",
-#     x_range=Location_Date,
+#     x_range=Location_Date_Year,
 #     tools="pan,box_select,zoom_in,zoom_out,save,reset"
 # )
 
 # # Render glyph for orange cars
 # p.vbar(
-#     x=Location_Date,
+#     x=Location_Date_Year,
 #     top=Tons,
 #     width=0.9,
 #     fill_alpha=0.5,

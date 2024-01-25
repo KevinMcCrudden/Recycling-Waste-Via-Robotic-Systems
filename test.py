@@ -1,52 +1,92 @@
 import pandas as pd
 
-# Read the CSV file
-df = pd.read_csv('22-23_WM_Recycling_Data.csv')
+class MyClass:
+    def __init__(self):
+        # Initialize the class with the CSV file
+        pass
 
-# Assuming your CSV columns are named 'Month' and 'Year'
-# Convert 'Year' and 'Month' columns to strings to ensure correct sorting
-df['YEAR'] = df['YEAR'].astype(str)
-df['MONTH'] = df['MONTH'].astype(str)
+    def convert_to_month_names(self, raw_csv_file):
+        # Define a dictionary to map integers to month names
+        # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
 
-# Create a new column 'YearMonth' by concatenating 'Year' and 'Month'
-df['YearMonth'] = df['YEAR'] + df['MONTH']
+        # Define a dictionary to map integers to month names
+        month_mapping = {
+            1: 'January',
+            2: 'February',
+            3: 'March',
+            4: 'April',
+            5: 'May',
+            6: 'June',
+            7: 'July',
+            8: 'August',
+            9: 'September',
+            10: 'October',
+            11: 'November',
+            12: 'December'
+        }
 
-# Convert 'TONNAGE' column to numeric (assuming it contains numeric values)
-df['TONNAGE'] = pd.to_numeric(df['TONNAGE'], errors='coerce')
+        # Convert 'MONTH' column to its corresponding month names
+        df['MONTH_STRING'] = df['MONTH'].apply(lambda month: month_mapping.get(month, 'Invalid Month'))
 
-# Sort the DataFrame by 'YearMonth'
-df.sort_values(by='YearMonth', inplace=True)
+        # Save the updated DataFrame to a new CSV file
+        df.to_csv(raw_csv_file, index=False)
+    
+    def sorter(self, raw_csv_file):
+        # Sorts the data by the YEAR and MONTH_STRING columns
+        # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
 
-# Create new columns for month totals
-for month in range(1, 13):
-    month_str = str(month)
-    month_total_column = f'Month_{month_str}_Total'
-    df[month_total_column] = df[df['MONTH'] == month_str]['TONNAGE'].sum()
+        # Assuming CSV columns are named 'MONTH_STRING' and 'YEAR'
+        # Convert 'Year' column to strings to ensure correct sorting
+        df['YEAR'] = df['YEAR'].astype(str)
 
-# Drop the temporary 'YearMonth' column if you don't need it anymore
-df.drop('YearMonth', axis=1, inplace=True)
+        # Define the natural order of months
+        month_order = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ]
 
-# Save the modified DataFrame back to a CSV file
-df.to_csv('modified_csv_file.csv', index=False)
+        # Convert 'Month' column to a categorical data type with custom sort order
+        df['MONTH_STRING'] = pd.Categorical(df['MONTH_STRING'], categories=month_order, ordered=True)
 
+        # Create a new column 'YearMonth' by concatenating 'Year' and 'Month'
+        df['YearMonth'] = df['YEAR'] + df['MONTH_STRING'].astype(str)
 
+        # Sort the DataFrame by 'Year' and 'Month'
+        df.sort_values(by=['YEAR', 'MONTH'], inplace=True)
 
-import pandas as pd
+        # Drop the temporary 'YearMonth' column if you don't need it anymore
+        df.drop('YearMonth', axis=1, inplace=True)
 
-# Load the CSV file into a DataFrame
-df = pd.read_csv(csv_file)
+        # Save the sorted DataFrame back to a CSV file
+        df.to_csv(raw_csv_file, index=False)
+            
+    def monthly_totals(self, raw_csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
 
-# Combine columns and sum tonnage
-df['Combined_Column'] = df['CUSTOMER_NM+MONTH_STRING'] + ' - ' + df['TONNAGE'].astype(str)
-result_df = df.groupby('Combined_Column')['TONNAGE'].sum().reset_index()
+        # Removes the 'WORCESTER POLYTECH text from the 'CUSTOMER_NM' column
+        df['CUSTOMER_NM_Modified'] = df['CUSTOMER_NM'].str.replace('WORCESTER POLYTECH', '')
 
-# Extract unique customers and months
-result_df['Customer'] = result_df['Combined_Column'].str.split(' - ').str[0]
-result_df['Month'] = result_df['Combined_Column'].str.split(' - ').str[1]
+        # Combines the 'CUSTOMER_NM' and 'MONTH_STRING' columns into one column
+        df['CUSTOMER_NM_Modified+MONTH_STRING'] = df['CUSTOMER_NM_Modified'] + ' - ' + df['MONTH_STRING'].astype(str) + ' - ' + df['YEAR'].astype(str)
 
-# Select relevant columns
-result_df = result_df[['Customer', 'Month', 'TONNAGE']]
+        # Save the updated DataFrame to a new CSV file
+        df.to_csv(raw_csv_file, index=False)
 
-# Display the result
-print(result_df)
+    def remove_duplicates_sum(self, raw_csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
 
+        # Combine columns to create a new column for grouping
+        df['Combined_Column'] = df['CUSTOMER_NM_Modified+MONTH_STRING']
+
+        # Group by the combined column and sum the TONNAGE
+        grouped_df = df.groupby(['Combined_Column'])['TONNAGE'].sum().reset_index()
+
+        # Save the result back to the original CSV file
+        grouped_df.to_csv(raw_csv_file, index=False)
+
+if __name__ == "__main__":
+    pass

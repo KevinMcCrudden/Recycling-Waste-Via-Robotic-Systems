@@ -3,7 +3,7 @@ import pandas as pd
 class MyClass:
     def __init__(self):
         # Initialize the class with the CSV file
-        pass
+        test = 3
 
     def convert_to_month_names(self, raw_csv_file):
         # Define a dictionary to map integers to month names

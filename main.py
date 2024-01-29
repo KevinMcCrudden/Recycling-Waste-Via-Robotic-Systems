@@ -2,6 +2,7 @@ from bokeh.plotting import figure, show
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
+import math
 import pandas as pd
 import helper as Helper
 
@@ -12,7 +13,10 @@ class Main:
         raw_csv_file = '22-23_WM_Recycling_Data.csv'
 
         # Create an instance of the helper class as Helper, using Tools to call it
+        # Also brings in varialbles defined in the helper class
         Tools = Helper.MyClass()
+        self.test = Tools.test
+        #print(self.test)
 
         # Assings the value of the column 'MONTH' to the variable 'Month'
         # Also converts the list of numbers to a list of strings as Bokeh does not support integers
@@ -104,6 +108,8 @@ class Main:
 
         # Show results
         show(plots)
+
+        print(self.Tons_2022)
 
 if __name__ == "__main__":
     #Run WPI_Waste function

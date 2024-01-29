@@ -1,9 +1,10 @@
 import pandas as pd
+import math
 
 class MyClass:
     def __init__(self):
-        # Initialize the class with the CSV file
-        test = 3
+        # Initialize the class with some variables from matlab
+        self.test = 3
 
     def convert_to_month_names(self, raw_csv_file):
         # Define a dictionary to map integers to month names

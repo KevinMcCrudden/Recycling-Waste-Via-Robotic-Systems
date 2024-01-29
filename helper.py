@@ -67,7 +67,7 @@ class MyClass:
         df.to_csv(new_file, index=False)
         return new_file
             
-    def monthly_totals(self, raw_csv_file):
+    def location_date(self, raw_csv_file):
         # Read the input CSV file
         df = pd.read_csv(raw_csv_file)
 
@@ -78,7 +78,7 @@ class MyClass:
         df['CUSTOMER_NM_Modified+MONTH_STRING'] = df['CUSTOMER_NM_Modified'] + ' - ' + df['MONTH_STRING'].astype(str) + ' - ' + df['YEAR'].astype(str)
 
         # Save the updated DataFrame to a new CSV file
-        new_file = raw_csv_file.replace('.csv', '_monthly_totals.csv')
+        new_file = raw_csv_file.replace('.csv', '_location_date.csv')
         df.to_csv(new_file, index=False)
         return new_file
 
@@ -116,6 +116,35 @@ class MyClass:
         df_2023.to_csv(file_2023, index=False)
 
         return file_2022, file_2023
+    
+    def monthly_total(self, raw_csv_file_2022, raw_csv_file_2023):
+        # Read the input CSV file
+        df_2022 = pd.read_csv(raw_csv_file_2022)
+        df_2023 = pd.read_csv(raw_csv_file_2023)
+
+        # Concatenate the DataFrames to ensure the same sorting
+        combined_df = pd.concat([df_2022, df_2023])
+
+        # Extract the month and year from the 'Combined_Column'
+        combined_df['Month'] = combined_df['Combined_Column'].str.extract(r'- (\w+) -')
+        combined_df['Year'] = combined_df['Combined_Column'].str.extract(r'- (\d{4})')
+
+        # Group by month and year, then sum the 'TONNAGE' for each group
+        monthly_totals = combined_df.groupby(['Month', 'Year'])['TONNAGE'].sum().reset_index()
+
+        # Create two new CSV files with the monthly totals
+        output_file_1 = raw_csv_file_2022.replace('.csv', '_monthly_totals.csv')
+        output_file_2 = raw_csv_file_2023.replace('.csv', '_monthly_totals.csv')
+
+        # Split the results into two based on the original DataFrames
+        df_2022_totals = monthly_totals[monthly_totals['Year'].astype(int) == 2022]
+        df_2023_totals = monthly_totals[monthly_totals['Year'].astype(int) == 2023]
+
+        # Save the results to two new CSV files
+        df_2022_totals.to_csv(output_file_1, index=False)
+        df_2023_totals.to_csv(output_file_2, index=False)
+
+        return output_file_1, output_file_2 
 
 if __name__ == "__main__":
     pass

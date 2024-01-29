@@ -2,6 +2,7 @@ from bokeh.plotting import figure, show
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
+from bokeh.models import Legend, ColumnDataSource, DataTable, TableColumn, LegendItem
 import math
 import pandas as pd
 import helper as Helper
@@ -144,11 +145,12 @@ class Main:
         )
 
         # Render glyph for 2022 year
-        f1.vbar(
+        bar1 = f1.vbar(
             x=self.Month_2022,
             top=self.Tons_2022,
             fill_alpha=0.5,
             line_color='green',
+            legend_label="2022"
         )
 
         # Add plot for 2023 year
@@ -163,14 +165,14 @@ class Main:
         )
 
         # Render glyph for 2023 year
-        f2.vbar(
+        bar2 = f2.vbar(
             x=self.Month_2023,
             top=self.Tons_2023,
             fill_alpha=0.5,
             line_color='green',
+            legend_label="2023"
         )
-
-
+        
         # Rotate the x-axis labels
         f1.xaxis.major_label_orientation ="vertical"
         f2.xaxis.major_label_orientation ="vertical"

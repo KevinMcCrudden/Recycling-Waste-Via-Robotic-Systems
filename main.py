@@ -6,6 +6,7 @@ from bokeh.models import Legend, ColumnDataSource, DataTable, TableColumn, Legen
 import math
 import pandas as pd
 import helper as Helper
+import numpy as np
 
 class Main:
     def __init__(self):
@@ -225,6 +226,17 @@ class Main:
         # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year'
         self.Month = df_combined['Month']
 
+        # Fit a polynomial to the data
+        degree = 2  # Set the degree of the polynomial
+        coefficients = np.polyfit(range(len(self.Tons)), self.Tons, degree)
+        polynomial = np.poly1d(coefficients)
+
+        # Generate x values for the trend line
+        x_values = np.linspace(0, len(self.Tons), 100)
+
+        # Calculate corresponding y values for the trend line
+        y_values = polynomial(x_values)
+
         # Add plot for both years on the same graph
         f = figure(
             title="WPI Recycling Academic Year",
@@ -241,6 +253,15 @@ class Main:
             top=self.Tons,
             fill_alpha=0.5,
             fill_color='blue',
+        )
+
+        # Add the polynomial trend line glyph to the plot
+        f.line(
+            x_values, 
+            y_values, 
+            line_color='red', 
+            line_width=2, 
+            legend_label='Polynomial Trend Line'
         )
 
         # Add a legend for 2022

@@ -10,16 +10,15 @@ import numpy as np
 
 class Main:
     def __init__(self):
-        # Initialize the class with many variables
+        # Initialize the class variables
         # Creates a variable to hold the csv file name
         raw_csv_file = '22_23_WPI.csv'
 
         # Create an instance of the helper class as Helper, using Tools to call it
-        # Also brings in varialbles defined in the helper class
+        # Also can brings in varialbles defined in the helper class
         self.Tools = Helper.MyClass()
 
-        # Assings the value of the column 'MONTH' to the variable 'Month'
-        # Also converts the list of numbers to a list of strings as Bokeh does not support integers
+        # Converts the list of numbers to a list of strings as Bokeh does not support integers
         raw_csv_file = self.Tools.convert_to_month_names(raw_csv_file)
 
         # Sorts the data by year and month
@@ -48,23 +47,23 @@ class Main:
         df_2023 = pd.read_csv(output_csv_file_2023)
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
-        self.Tons_2022 = df_2022['TONNAGE']
+        Tons_2022 = df_2022['TONNAGE']
 
         # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
-        self.Location_Date_Year_2022 = df_2022['Combined_Column']
+        Location_Date_Year_2022 = df_2022['Combined_Column']
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
-        self.Tons_2023 = df_2023['TONNAGE']
+        Tons_2023 = df_2023['TONNAGE']
 
         # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
-        self.Location_Date_Year_2023 = df_2023['Combined_Column']
+        Location_Date_Year_2023 = df_2023['Combined_Column']
 
         # Add plot for 2022 year
         f1 = figure(
             title="22 WPI Recycling",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=self.Location_Date_Year_2022,
+            x_range=Location_Date_Year_2022,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -72,8 +71,8 @@ class Main:
 
         # Render glyph for 2022 year
         f1.vbar(
-            x=self.Location_Date_Year_2022,
-            top=self.Tons_2022,
+            x=Location_Date_Year_2022,
+            top=Tons_2022,
             fill_alpha=0.5,
             fill_color='green',
         )
@@ -83,7 +82,7 @@ class Main:
             title="23 WPI Recycling",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=self.Location_Date_Year_2023,
+            x_range=Location_Date_Year_2023,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -91,8 +90,8 @@ class Main:
 
         # Render glyph for 2023 year
         f2.vbar(
-            x=self.Location_Date_Year_2023,
-            top=self.Tons_2023,
+            x=Location_Date_Year_2023,
+            top=Tons_2023,
             fill_alpha=0.5,
             fill_color='green',
         )
@@ -123,23 +122,23 @@ class Main:
         df_2023 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023_monthly_totals.csv')
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
-        self.Tons_2022 = df_2022['TONNAGE']
+        Tons_2022 = df_2022['TONNAGE']
 
-        # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
-        self.Month_2022 = df_2022['Month']
+        # Assings the value of the column 'Month' to the variable 'Month' for 2022
+        Month_2022 = df_2022['Month']
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
-        self.Tons_2023 = df_2023['TONNAGE']
+        Tons_2023 = df_2023['TONNAGE']
 
-        # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
-        self.Month_2023 = df_2023['Month']
+        # Assings the value of the column 'Month' to the variable 'Month' for 2022
+        Month_2023 = df_2023['Month']
 
         # Add plot for 2022 year
         f1 = figure(
             title="22 WPI Recycling Monthly",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=self.Month_2022,
+            x_range=Month_2022,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -147,8 +146,8 @@ class Main:
 
         # Render glyph for 2022 year
         bar1 = f1.vbar(
-            x=self.Month_2022,
-            top=self.Tons_2022,
+            x=Month_2022,
+            top=Tons_2022,
             fill_alpha=0.5,
             fill_color='red',
         )
@@ -169,7 +168,7 @@ class Main:
             title="23 WPI Recycling Monthly",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=self.Month_2023,
+            x_range=Month_2023,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -177,8 +176,8 @@ class Main:
 
         # Render glyph for 2023 year
         bar2 = f2.vbar(
-            x=self.Month_2023,
-            top=self.Tons_2023,
+            x=Month_2023,
+            top=Tons_2023,
             fill_alpha=0.5,
             fill_color='red',
         )
@@ -221,18 +220,18 @@ class Main:
         df_combined = pd.concat([df_2022, df_2023])
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons'
-        self.Tons = df_combined['TONNAGE']
+        Tons = df_combined['TONNAGE']
 
-        # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year'
-        self.Month = df_combined['Month']
+        # Assings the value of the column 'Month' to the variable 'Month'
+        Month = df_combined['Month']
 
         # Fit a polynomial to the data
         degree = 2  # Set the degree of the polynomial
-        coefficients = np.polyfit(range(len(self.Tons)), self.Tons, degree)
+        coefficients = np.polyfit(range(len(Tons)), Tons, degree)
         polynomial = np.poly1d(coefficients)
 
         # Generate x values for the trend line
-        x_values = np.linspace(0, len(self.Tons), 100)
+        x_values = np.linspace(0, len(Tons), 100)
 
         # Calculate corresponding y values for the trend line
         y_values = polynomial(x_values)
@@ -242,15 +241,15 @@ class Main:
             title="WPI Recycling Academic Year",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=self.Month,
+            x_range=Month,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
         )
 
         # Render glyphs for 2022 year
         bar1 = f.vbar(
-            x=self.Month,
-            top=self.Tons,
+            x=Month,
+            top=Tons,
             fill_alpha=0.5,
             fill_color='blue',
         )
@@ -281,15 +280,24 @@ class Main:
         # Show the result
         show(f)
 
+    def robot_recycling(self):
+        pass
+
+    def profitability(self):
+        pass
+
+    def roi(self):
+        pass 
+
 if __name__ == "__main__":
     # Run init
     Main().__init__
 
     # Graph the yearly charts
-    #Main().WPI_Waste()
+    Main().WPI_Waste()
 
     # Graph the monthly charts
-    #Main().WPI_Waste_Monthly()
+    Main().WPI_Waste_Monthly()
 
     # Graph the academic year
     Main().WPI_Waste_Academic_Year()

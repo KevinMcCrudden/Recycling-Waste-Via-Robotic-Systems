@@ -202,12 +202,74 @@ class Main:
         # Show results
         show(plots)
 
+    def WPI_Waste_Academic_Year(self):
+        # Set the CSV file for the montly totals
+        monthly_totals_2022 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022.csv'
+        monthly_totals_2023 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023.csv'
+        
+        # Call the monthly_total function from the helper class
+        self.Tools.monthly_total(monthly_totals_2022, monthly_totals_2023)
+
+        # Read the CSV file that was created by the helper class from 2022
+        df_2022 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022_monthly_totals.csv')
+
+        # Read the CSV file that was created by the helper class from 2023
+        df_2023 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023_monthly_totals.csv')
+
+        # Concetenate the two years together
+        df_combined = pd.concat([df_2022, df_2023])
+
+        # Assings the value of the column 'TONNAGE' to the variable 'Tons'
+        self.Tons = df_combined['TONNAGE']
+
+        # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year'
+        self.Month = df_combined['Month']
+
+        # Add plot for both years on the same graph
+        f = figure(
+            title="WPI Recycling Academic Year",
+            x_axis_label="Months of the year",
+            y_axis_label="Weight in Tons",
+            x_range=self.Month,
+            tools="pan,box_select,zoom_in,zoom_out,save,reset",
+            sizing_mode="stretch_both",
+        )
+
+        # Render glyphs for 2022 year
+        bar1 = f.vbar(
+            x=self.Month,
+            top=self.Tons,
+            fill_alpha=0.5,
+            fill_color='blue',
+        )
+
+        # Add a legend for 2022
+        legend = Legend(
+            items=[(f"{df_combined['TONNAGE'].sum()} Tons", [bar1])],
+            location="center",
+            orientation="horizontal",
+            click_policy="hide"
+        )
+
+        # Add the legend to the plot
+        f.add_layout(legend, 'below')
+
+        # Rotate the x-axis labels
+        f.xaxis.major_label_orientation = "vertical"
+  
+        # Show the result
+        show(f)
+
 if __name__ == "__main__":
     # Run init
     Main().__init__
 
     # Graph the yearly charts
-    Main().WPI_Waste()
+    #Main().WPI_Waste()
 
     # Graph the monthly charts
-    Main().WPI_Waste_Monthly()
+    #Main().WPI_Waste_Monthly()
+
+    # Graph the academic year
+    Main().WPI_Waste_Academic_Year()
+

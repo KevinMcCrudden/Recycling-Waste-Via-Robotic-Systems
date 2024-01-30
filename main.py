@@ -74,7 +74,7 @@ class Main:
             x=self.Location_Date_Year_2022,
             top=self.Tons_2022,
             fill_alpha=0.5,
-            line_color='green',
+            fill_color='green',
         )
 
         # Add plot for 2023 year
@@ -93,7 +93,7 @@ class Main:
             x=self.Location_Date_Year_2023,
             top=self.Tons_2023,
             fill_alpha=0.5,
-            line_color='green',
+            fill_color='green',
         )
 
 
@@ -133,12 +133,6 @@ class Main:
         # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
         self.Month_2023 = df_2023['Month']
 
-        # Create a ColumnDataSource for the legend of 2022
-        legend_source_2022 = ColumnDataSource(data=dict(Year=['2022'], Total=[df_2022['TONNAGE'].sum()]))
-
-        # Create a ColumnDataSource for the legend of 2023
-        legend_source_2023 = ColumnDataSource(data=dict(Year=['2023'], Total=[df_2023['TONNAGE'].sum()]))
-
         # Add plot for 2022 year
         f1 = figure(
             title="22 WPI Recycling Monthly",
@@ -147,6 +141,7 @@ class Main:
             x_range=self.Month_2022,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
+            
         )
 
         # Render glyph for 2022 year
@@ -154,13 +149,12 @@ class Main:
             x=self.Month_2022,
             top=self.Tons_2022,
             fill_alpha=0.5,
-            line_color='green',
-            legend_label="2022"
+            fill_color='red',
         )
 
-        # Create a legend for 2022
+        # Add a legend for 2022
         legend_2022 = Legend(
-            items=[("Total", [bar1])],
+            items=[(f"{df_2022['TONNAGE'].sum()} Tons", [bar1])],
             location="center",
             orientation="horizontal",
             click_policy="hide"
@@ -177,6 +171,7 @@ class Main:
             x_range=self.Month_2023,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
+            
         )
 
         # Render glyph for 2023 year
@@ -184,13 +179,11 @@ class Main:
             x=self.Month_2023,
             top=self.Tons_2023,
             fill_alpha=0.5,
-            line_color='green',
-            legend_label="2023"
+            fill_color='red',
         )
 
-        # Create a legend for 2023
         legend_2023 = Legend(
-            items=[("Total", [bar2])],
+            items=[(f"{df_2023['TONNAGE'].sum()} Tons", [bar2])],
             location="center",
             orientation="horizontal",
             click_policy="hide"
@@ -204,67 +197,17 @@ class Main:
         f2.xaxis.major_label_orientation ="vertical"
 
         # Combining plots 
-        plots = row([f1, f2], sizing_mode="stretch_both")
+        plots = row([f1,f2], sizing_mode="stretch_both")
 
         # Show results
         show(plots)
-
-        #    # Add plot for 2022 year
-        # f1 = figure(
-        #     title="22 WPI Recycling Monthly",
-        #     x_axis_label="Months of the year",
-        #     y_axis_label="Weight in Tons",
-        #     x_range=self.Month_2022,
-        #     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        #     sizing_mode="stretch_both",
-            
-        # )
-
-        # # Render glyph for 2022 year
-        # bar1 = f1.vbar(
-        #     x=self.Month_2022,
-        #     top=self.Tons_2022,
-        #     fill_alpha=0.5,
-        #     line_color='green',
-        #     legend_label="2022"
-        # )
-
-        # # Add plot for 2023 year
-        # f2 = figure(
-        #     title="23 WPI Recycling Monthly",
-        #     x_axis_label="Months of the year",
-        #     y_axis_label="Weight in Tons",
-        #     x_range=self.Month_2023,
-        #     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        #     sizing_mode="stretch_both",
-            
-        # )
-
-        # # Render glyph for 2023 year
-        # bar2 = f2.vbar(
-        #     x=self.Month_2023,
-        #     top=self.Tons_2023,
-        #     fill_alpha=0.5,
-        #     line_color='green',
-        #     legend_label="2023"
-        # )
-
-        # # Rotate the x-axis labels
-        # f1.xaxis.major_label_orientation ="vertical"
-        # f2.xaxis.major_label_orientation ="vertical"
-
-        # # Combining plots 
-        # plots = row([f1,f2], sizing_mode="stretch_both")
-
-        # # Show results
-        # show(plots)
 
 if __name__ == "__main__":
     # Run init
     Main().__init__
 
     # Graph the yearly charts
-    #Main().WPI_Waste()
+    Main().WPI_Waste()
 
     # Graph the monthly charts
     Main().WPI_Waste_Monthly()

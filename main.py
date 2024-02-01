@@ -42,7 +42,7 @@ class Main:
 
         # Defines the two files for 2022 and 2023
         raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed.csv'
-        raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2023_processed.csv'
+        raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed.csv'
 
         # Sorts the 2022 and 2023 data by month
         self.Tools.sorter_monthly(raw_csv_file_2022, raw_csv_file_2023)

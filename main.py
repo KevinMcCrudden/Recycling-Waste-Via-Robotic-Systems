@@ -49,10 +49,10 @@ class Main:
 
     def WPI_Waste(self):
         # Set the CSV file for the 2022 year
-        output_csv_file_2022 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022.csv'
+        output_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly.csv'
 
         # Set the CSV file for the 2023 year
-        output_csv_file_2023 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023.csv'
+        output_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly.csv'
 
         # Read the CSV file that was created by the helper class from 2022
         df_2022 = pd.read_csv(output_csv_file_2022)
@@ -63,21 +63,21 @@ class Main:
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
         Tons_2022 = df_2022['TONNAGE']
 
-        # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
-        Location_Date_Year_2022 = df_2022['Combined_Column']
+        # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2022
+        Location_2022 = pd.concat([df_2022['CUSTOMER_NM_Modified'], df_2022['MONTH_STRING']], axis=1)
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
         Tons_2023 = df_2023['TONNAGE']
 
-        # Assings the value of the column 'Combined_Column' to the variable 'Location_Date_Year' for 2022
-        Location_Date_Year_2023 = df_2023['Combined_Column']
+        # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2023
+        Location_2023 = pd.concat([df_2023['CUSTOMER_NM_Modified'], df_2023['MONTH_STRING']], axis=1)
 
         # Add plot for 2022 year
         f1 = figure(
             title="22 WPI Recycling",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=Location_Date_Year_2022,
+            x_range=Location_2022,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -85,7 +85,7 @@ class Main:
 
         # Render glyph for 2022 year
         f1.vbar(
-            x=Location_Date_Year_2022,
+            x=Location_2022,
             top=Tons_2022,
             fill_alpha=0.5,
             fill_color='green',
@@ -96,7 +96,7 @@ class Main:
             title="23 WPI Recycling",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=Location_Date_Year_2023,
+            x_range=Location_2023,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -104,7 +104,7 @@ class Main:
 
         # Render glyph for 2023 year
         f2.vbar(
-            x=Location_Date_Year_2023,
+            x=Location_2023,
             top=Tons_2023,
             fill_alpha=0.5,
             fill_color='green',
@@ -308,7 +308,7 @@ if __name__ == "__main__":
     Main().__init__
 
     # Graph the yearly charts
-    #Main().WPI_Waste()
+    Main().WPI_Waste()
 
     # Graph the monthly charts
     #Main().WPI_Waste_Monthly()

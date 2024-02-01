@@ -24,14 +24,8 @@ class Main:
         # Sorts the data by year and month
         raw_csv_file = self.Tools.sorter(raw_csv_file)
 
-        # Combines the 'CUSTOMER_NM' column with the 'MONTH_STRING' column
-        raw_csv_file = self.Tools.location_date(raw_csv_file)
-
-        # Removes duplicate locations during the same month and totals the TONNAGE
-        raw_csv_file = self.Tools.remove_duplicates_sum(raw_csv_file)
-
-        # This splits the 2022 and 2023 years apart to graph them separately
-        raw_csv_file = self.Tools.create_yearly_files(raw_csv_file)
+        # Call the add_location_row function from the helper class
+        raw_csv_file = self.Tools.add_location_row(raw_csv_file)
     
     def WPI_Waste(self):
         # Set the CSV file for the 2022 year
@@ -294,11 +288,11 @@ if __name__ == "__main__":
     Main().__init__
 
     # Graph the yearly charts
-    Main().WPI_Waste()
+    #Main().WPI_Waste()
 
     # Graph the monthly charts
-    Main().WPI_Waste_Monthly()
+    #Main().WPI_Waste_Monthly()
 
     # Graph the academic year
-    Main().WPI_Waste_Academic_Year()
+    #Main().WPI_Waste_Academic_Year()
 

@@ -2,7 +2,7 @@ from bokeh.plotting import figure, show
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from bokeh.models import Legend, ColumnDataSource, DataTable, TableColumn, LegendItem
+from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem
 import math
 import pandas as pd
 import helper as Helper
@@ -72,12 +72,32 @@ class Main:
         # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2023
         Location_2023 = pd.concat([df_2023['CUSTOMER_NM_Modified'], df_2023['MONTH_STRING']], axis=1)
 
+        # Concatenate 'CUSTOMER_NM_Modified' and 'MONTH_STRING' columns to create a new column
+        Location_2022['Location_Date'] = Location_2022['CUSTOMER_NM_Modified'] + ' ' + Location_2022['MONTH_STRING']
+        Location_2023['Location_Date'] = Location_2023['CUSTOMER_NM_Modified'] + ' ' + Location_2023['MONTH_STRING']
+
+        # Combine Location and Month into a single FactorRange for x-axis
+        x_range_2022 = FactorRange(*Location_2022['Location_Date'].unique())
+        x_range_2023 = FactorRange(*Location_2023['Location_Date'].unique())
+
+        # Create a ColumnDataSource for the data from 2022
+        source_2022 = ColumnDataSource(data=dict(
+            Location_Date=Location_2022['Location_Date'],
+            Tonnage=Tons_2022
+        ))
+
+        # Create a ColumnDataSource for the data from 2023
+        source_2023 = ColumnDataSource(data=dict(
+            Location_Date=Location_2023['Location_Date'],
+            Tonnage=Tons_2023
+        ))
+
         # Add plot for 2022 year
         f1 = figure(
             title="22 WPI Recycling",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=Location_2022,
+            x_range=x_range_2022,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -85,10 +105,12 @@ class Main:
 
         # Render glyph for 2022 year
         f1.vbar(
-            x=Location_2022,
-            top=Tons_2022,
+            x='Location_Date',
+            top='Tonnage',
+            width=0.9,
             fill_alpha=0.5,
             fill_color='green',
+            source = source_2022
         )
 
         # Add plot for 2023 year
@@ -96,7 +118,7 @@ class Main:
             title="23 WPI Recycling",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
-            x_range=Location_2023,
+            x_range=x_range_2023,
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
             
@@ -104,10 +126,12 @@ class Main:
 
         # Render glyph for 2023 year
         f2.vbar(
-            x=Location_2023,
-            top=Tons_2023,
+            x='Location_Date',
+            top='Tonnage',
+            width=0.9,
             fill_alpha=0.5,
-            fill_color='green',
+            fill_color='red',
+            source = source_2023
         )
 
 

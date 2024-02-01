@@ -26,7 +26,27 @@ class Main:
 
         # Call the add_location_row function from the helper class
         raw_csv_file = self.Tools.add_location_row(raw_csv_file)
-    
+
+        # Removes all the junk Columns
+        raw_csv_file = self.Tools.clean(raw_csv_file)
+
+        # Splits the data into two files, one for 2023 and one for 2022
+        raw_csv_file = self.Tools.splitter(raw_csv_file)
+
+        # Defines the two files for 2022 and 2023
+        raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022.csv'
+        raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023.csv'
+
+        # Sums all the same locations pickups for a given location and month
+        self.Tools.process_data(raw_csv_file_2022, raw_csv_file_2023)
+
+        # Defines the two files for 2022 and 2023
+        raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed.csv'
+        raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2023_processed.csv'
+
+        # Sorts the 2022 and 2023 data by month
+        self.Tools.sorter_monthly(raw_csv_file_2022, raw_csv_file_2023)
+
     def WPI_Waste(self):
         # Set the CSV file for the 2022 year
         output_csv_file_2022 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022.csv'

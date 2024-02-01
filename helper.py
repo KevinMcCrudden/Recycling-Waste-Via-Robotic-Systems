@@ -33,6 +33,7 @@ class MyClass:
         # Save the updated DataFrame to a new CSV file
         new_file = raw_csv_file.replace('.csv', '_month.csv')
         df.to_csv(new_file, index=False)
+
         return new_file
     
     def sorter(self, raw_csv_file):
@@ -65,6 +66,7 @@ class MyClass:
         # Save the sorted DataFrame back to a new CSV file
         new_file = raw_csv_file.replace('.csv', '_sorted.csv')
         df.to_csv(new_file, index=False)
+
         return new_file
         
     def add_location_row(self, raw_csv_file):
@@ -75,20 +77,93 @@ class MyClass:
         df['CUSTOMER_NM_Modified'] = df['CUSTOMER_NM'].str.replace('WORCESTER POLYTECH', '')
 
         # Combines the 'CUSTOMER_NM' and 'MONTH_STRING' columns into one column
-        df['CUSTOMER_NM_Modified+MONTH_STRING'] = df['CUSTOMER_NM_Modified'] + ' - ' + df['MONTH_STRING'].astype(str)
-
-        # Drops the 'CUSTOMER_NM_Modified' column
-        df.drop('CUSTOMER_NM_Modified', axis=1, inplace=True)
-
+        df['CUSTOMER_NM_Modified'] = df['CUSTOMER_NM_Modified']
+        
         # Save the updated DataFrame to a new CSV file
         new_file = raw_csv_file.replace('.csv', '_location_row.csv')
         df.to_csv(new_file, index=False)
+
         return new_file
     
-    def create_yearly_files(self, raw_csv_file):
-        pass
+    def clean(self, raw_csv_file):
+         # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
+
+        # Sets the columns I want to keep
+        columns = [
+            'YEAR',
+            'TONNAGE',
+            'MONTH_STRING',
+            'CUSTOMER_NM_Modified'
+        ]
+
+        df = df[columns]
     
-    def monthly_total(self, raw_csv_file_2022, raw_csv_file_2023):
-        pass
+        # Save the updated DataFrame to a new CSV file
+        new_file = raw_csv_file.replace('.csv', '_clean.csv')
+        df.to_csv(new_file, index=False)
+
+        return new_file
+    
+    def splitter(self, raw_csv_file):
+        # Read the input CSV file
+        df = pd.read_csv(raw_csv_file)
+
+        # Separate the data into two DataFrames for each year
+        df_2022 = df[df['YEAR'] == 2022]
+        df_2023 = df[df['YEAR'] == 2023]
+
+        # Save the DataFrames to new CSV files
+        file_2022 = raw_csv_file.replace('.csv', '_2022.csv')
+        file_2023 = raw_csv_file.replace('.csv', '_2023.csv')
+
+        df_2022.to_csv(file_2022, index=False)
+        df_2023.to_csv(file_2023, index=False)
+
+        return file_2022, file_2023
+    
+    def process_data(self, raw_csv_file_2022, raw_csv_file_2023):
+        # Read the input CSV files
+        df_2022 = pd.read_csv(raw_csv_file_2022)
+        df_2023 = pd.read_csv(raw_csv_file_2023)
+
+        # Group by 'CUSTOMER_NM_Modified' and 'MONTH_STRING' and sum 'TONNAGE' for each DataFrame
+        result_df1 = df_2022.groupby(['CUSTOMER_NM_Modified', 'MONTH_STRING'], as_index=False)['TONNAGE'].sum()
+        result_df2 = df_2023.groupby(['CUSTOMER_NM_Modified', 'MONTH_STRING'], as_index=False)['TONNAGE'].sum()
+
+        # Save the DataFrames to new CSV files
+        file_2022 = raw_csv_file_2022.replace('.csv', '_processed.csv')
+        file_2023 = raw_csv_file_2023.replace('.csv', '_processed.csv')
+
+        result_df1.to_csv(file_2022, index=False)
+        result_df2.to_csv(file_2023, index=False)
+
+    def sorter_monthly(self, raw_csv_file_2022, raw_csv_file_2023):
+        # Read the input CSV files
+        df_2022 = pd.read_csv(raw_csv_file_2022)
+        df_2023 = pd.read_csv(raw_csv_file_2023)
+
+        # Assuming 'MONTH_STRING' is a categorical column with the order you want
+        month_order = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ]
+
+        # Sort the DataFrames by 'MONTH_STRING' and 'CUSTOMER_NM_Modified'
+        df_2022['MONTH_STRING'] = pd.Categorical(df_2022['MONTH_STRING'], categories=month_order, ordered=True)
+        df_2022.sort_values(by=['MONTH_STRING', 'CUSTOMER_NM_Modified'], inplace=True)
+        
+        df_2023['MONTH_STRING'] = pd.Categorical(df_2023['MONTH_STRING'], categories=month_order, ordered=True)
+        df_2023.sort_values(by=['MONTH_STRING', 'CUSTOMER_NM_Modified'], inplace=True)
+
+        # Save the sorted DataFrames to new CSV files
+        sorted_file_2022 = raw_csv_file_2022.replace('.csv', '_monthly.csv')
+        sorted_file_2023 = raw_csv_file_2023.replace('.csv', '_monthly.csv')
+
+        df_2022.to_csv(sorted_file_2022, index=False)
+        df_2023.to_csv(sorted_file_2023, index=False)
+
+        return sorted_file_2022, sorted_file_2023
+
 if __name__ == "__main__":
     pass

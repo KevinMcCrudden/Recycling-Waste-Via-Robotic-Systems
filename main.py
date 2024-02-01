@@ -48,29 +48,21 @@ class Main:
         self.Tools.sorter_monthly(raw_csv_file_2022, raw_csv_file_2023)
 
     def WPI_Waste(self):
-        # Set the CSV file for the 2022 year
+        # Set the CSV file for the 2022 year and 2023
         output_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly.csv'
-
-        # Set the CSV file for the 2023 year
         output_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly.csv'
 
-        # Read the CSV file that was created by the helper class from 2022
+        # Read the CSV file that was created by the helper class from 2022 and 2023
         df_2022 = pd.read_csv(output_csv_file_2022)
-
-        # Read the CSV file that was created by the helper class from 2023
         df_2023 = pd.read_csv(output_csv_file_2023)
 
-        # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
+        # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022 and 2023
         Tons_2022 = df_2022['TONNAGE']
-
-        # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2022
-        Location_2022 = pd.concat([df_2022['CUSTOMER_NM_Modified'], df_2022['MONTH_STRING']], axis=1)
-
-        # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
         Tons_2023 = df_2023['TONNAGE']
 
-        # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2023
-        Location_2023 = pd.concat([df_2023['CUSTOMER_NM_Modified'], df_2023['MONTH_STRING']], axis=1)
+        # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2022 and 2023
+        Location_2022 = pd.concat([df_2022['CUSTOMER_NM_Modified'], df_2022['MONTH_STRING']], axis=1)
+        Location_2023 = pd.concat([df_2023['CUSTOMER_NM_Modified'], df_2023['MONTH_STRING']], axis=1)        
 
         # Concatenate 'CUSTOMER_NM_Modified' and 'MONTH_STRING' columns to create a new column
         Location_2022['Location_Date'] = Location_2022['CUSTOMER_NM_Modified'] + ' ' + Location_2022['MONTH_STRING']

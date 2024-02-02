@@ -56,33 +56,17 @@ class Main:
         df_2022 = pd.read_csv(output_csv_file_2022)
         df_2023 = pd.read_csv(output_csv_file_2023)
 
-        # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022 and 2023
-        Tons_2022 = df_2022['TONNAGE']
-        Tons_2023 = df_2023['TONNAGE']
-
-        # Assings the value of the column 'CUSTOMER_NM_Modified' and 'MONTH_STRING' to the variable 'Location_Date' for 2022 and 2023
-        Location_2022 = pd.concat([df_2022['CUSTOMER_NM_Modified'], df_2022['MONTH_STRING']], axis=1)
-        Location_2023 = pd.concat([df_2023['CUSTOMER_NM_Modified'], df_2023['MONTH_STRING']], axis=1)        
-
         # Concatenate 'CUSTOMER_NM_Modified' and 'MONTH_STRING' columns to create a new column
-        Location_2022['Location_Date'] = Location_2022['CUSTOMER_NM_Modified'] + ' ' + Location_2022['MONTH_STRING']
-        Location_2023['Location_Date'] = Location_2023['CUSTOMER_NM_Modified'] + ' ' + Location_2023['MONTH_STRING']
+        df_2022['Location_Date'] = df_2022['CUSTOMER_NM_Modified'] + ' ' + df_2022['MONTH_STRING']
+        df_2023['Location_Date'] = df_2023['CUSTOMER_NM_Modified'] + ' ' + df_2023['MONTH_STRING']
 
         # Combine Location and Month into a single FactorRange for x-axis
-        x_range_2022 = FactorRange(*Location_2022['Location_Date'].unique())
-        x_range_2023 = FactorRange(*Location_2023['Location_Date'].unique())
+        x_range_2022 = FactorRange(*df_2022['Location_Date'].unique())
+        x_range_2023 = FactorRange(*df_2023['Location_Date'].unique())
 
         # Create a ColumnDataSource for the data from 2022
-        source_2022 = ColumnDataSource(data=dict(
-            Location_Date=Location_2022['Location_Date'],
-            Tonnage=Tons_2022
-        ))
-
-        # Create a ColumnDataSource for the data from 2023
-        source_2023 = ColumnDataSource(data=dict(
-            Location_Date=Location_2023['Location_Date'],
-            Tonnage=Tons_2023
-        ))
+        source_2022 = ColumnDataSource(df_2022)
+        source_2023 = ColumnDataSource(df_2023)
 
         # Add plot for 2022 year
         f1 = figure(
@@ -98,7 +82,7 @@ class Main:
         # Render glyph for 2022 year
         f1.vbar(
             x='Location_Date',
-            top='Tonnage',
+            top='TONNAGE',
             width=0.9,
             fill_alpha=0.5,
             fill_color='green',
@@ -119,13 +103,12 @@ class Main:
         # Render glyph for 2023 year
         f2.vbar(
             x='Location_Date',
-            top='Tonnage',
+            top='TONNAGE',
             width=0.9,
             fill_alpha=0.5,
             fill_color='red',
             source = source_2023
         )
-
 
         # Rotate the x-axis labels
         f1.xaxis.major_label_orientation ="vertical"

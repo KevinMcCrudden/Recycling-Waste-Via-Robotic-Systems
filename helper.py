@@ -1,4 +1,6 @@
 import pandas as pd
+from pandas.tseries.offsets import MonthEnd
+from calendar import month_name
 import math
 
 class MyClass:
@@ -164,6 +166,40 @@ class MyClass:
         df_2023.to_csv(sorted_file_2023, index=False)
 
         return sorted_file_2022, sorted_file_2023
+    
+    def monthly_total(self, raw_csv_file_2022, raw_csv_file_2023):
+        # Read the input CSV files
+        df_2022 = pd.read_csv(raw_csv_file_2022)
+        df_2023 = pd.read_csv(raw_csv_file_2023)
+
+        # Define a mapping from month names to month numbers
+        month_to_num = {name: num for num, name in enumerate(month_name) if name}
+        
+        # Add a new column for month numbers, converting from month names
+        df_2022['MONTH_NUM'] = df_2022['MONTH_STRING'].map(month_to_num)
+        df_2023['MONTH_NUM'] = df_2023['MONTH_STRING'].map(month_to_num)
+        
+        # Group by 'MONTH_STRING' and sum 'TONNAGE' for each DataFrame
+        result_df1 = df_2022.groupby(['MONTH_STRING', 'MONTH_NUM'], as_index=False)['TONNAGE'].sum()
+        result_df2 = df_2023.groupby(['MONTH_STRING', 'MONTH_NUM'], as_index=False)['TONNAGE'].sum()
+        
+        # Sort the DataFrames based on the month number
+        result_df1 = result_df1.sort_values('MONTH_NUM')
+        result_df2 = result_df2.sort_values('MONTH_NUM')
+        
+        # Drop the 'MONTH_NUM' column as it is no longer needed after sorting
+        result_df1 = result_df1.drop('MONTH_NUM', axis=1)
+        result_df2 = result_df2.drop('MONTH_NUM', axis=1)
+
+        # Save the DataFrames to new CSV files
+        file_2022 = raw_csv_file_2022.replace('.csv', '_total.csv')
+        file_2023 = raw_csv_file_2023.replace('.csv', '_total.csv')
+
+        result_df1.to_csv(file_2022, index=False)
+        result_df2.to_csv(file_2023, index=False)
+
+        return file_2022, file_2023
+    
 
 if __name__ == "__main__":
     pass

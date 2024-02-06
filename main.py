@@ -33,19 +33,25 @@ class Main:
         # Splits the data into two files, one for 2023 and one for 2022
         raw_csv_file = self.Tools.splitter(raw_csv_file)
 
-        # Defines the two files for 2022 and 2023
+        # Defines the two files for 2022 and 2023 to be used in the process_data function
         raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022.csv'
         raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023.csv'
 
         # Sums all the same locations pickups for a given location and month
         self.Tools.process_data(raw_csv_file_2022, raw_csv_file_2023)
 
-        # Defines the two files for 2022 and 2023
+        # Defines the two files for 2022 and 2023 sorter by month
         raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed.csv'
         raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed.csv'
 
         # Sorts the 2022 and 2023 data by month
         self.Tools.sorter_monthly(raw_csv_file_2022, raw_csv_file_2023)
+
+        # Defines the two files for 2022 and 2023 that sums each per month
+        raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly.csv'
+        raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly.csv'
+
+        self.Tools.monthly_total(raw_csv_file_2022, raw_csv_file_2023)
 
     def WPI_Waste(self):
         # Set the CSV file for the 2022 year and 2023
@@ -307,7 +313,7 @@ if __name__ == "__main__":
     Main().__init__
 
     # Graph the yearly charts
-    Main().WPI_Waste()
+    #Main().WPI_Waste()
 
     # Graph the monthly charts
     #Main().WPI_Waste_Monthly()

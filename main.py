@@ -239,7 +239,7 @@ class Main:
         Month = df_combined['MONTH_STRING']
 
         # Fit a polynomial to the data
-        degree = 2  # Set the degree of the polynomial
+        degree = 3  # Set the degree of the polynomial
         coefficients = np.polyfit(range(len(Tons)), Tons, degree)
         polynomial = np.poly1d(coefficients)
 
@@ -255,6 +255,7 @@ class Main:
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
             x_range=Month,
+            y_range=(0, 100),
             tools="pan,box_select,zoom_in,zoom_out,save,reset",
             sizing_mode="stretch_both",
         )

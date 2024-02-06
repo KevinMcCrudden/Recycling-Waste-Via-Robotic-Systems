@@ -242,6 +242,18 @@ class Main:
         degree = 3  # Set the degree of the polynomial
         coefficients = np.polyfit(range(len(Tons)), Tons, degree)
         polynomial = np.poly1d(coefficients)
+        
+        # Format the polynomial equation as a string
+        equation_parts = []
+        for deg, coef in enumerate(coefficients[::-1]):
+            if deg == 0:
+                part = f"{coef:.2f}"
+            elif deg == 1:
+                part = f"{coef:+.2f}x"
+            else:
+                part = f"{coef:+.2f}x^{deg}"
+            equation_parts.append(part)
+        equation = "y = " + " ".join(equation_parts)
 
         # Generate x values for the trend line
         x_values = np.linspace(0, len(Tons), 100)
@@ -274,7 +286,7 @@ class Main:
             y_values, 
             line_color='red', 
             line_width=2, 
-            legend_label='Polynomial Trend Line'
+            legend_label=f'Polynomial Trend Line: {equation}'
         )
 
         # Add a legend for 2022

@@ -4,6 +4,7 @@ from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
 from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem
 import math
+import time
 import pandas as pd
 import helper as Helper
 import numpy as np
@@ -231,7 +232,7 @@ class Main:
         Month = df_combined['MONTH_STRING']
 
         # Fit a polynomial to the data
-        degree = 3  # Set the degree of the polynomial
+        degree = 3 # Set the degree of the polynomial
         coefficients = np.polyfit(range(len(Tons)), Tons, degree)
         polynomial = np.poly1d(coefficients)
 
@@ -298,7 +299,7 @@ class Main:
         # Show the result
         show(f)
 
-    def robot_recycling(self):
+    def Robot_Recycling(self):
         # Set the CSV file for the montly totals
         monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
         monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
@@ -402,14 +403,14 @@ if __name__ == "__main__":
     Main().__init__
 
     # Graph the yearly charts
-    #Main().WPI_Waste()
-
+    Main().WPI_Waste()
+    time.sleep(0.5)
     # Graph the monthly charts
-    #Main().WPI_Waste_Monthly()
-
+    Main().WPI_Waste_Monthly()
+    time.sleep(0.5)
     # Graph the academic year
     Main().WPI_Waste_Academic_Year()
-
+    time.sleep(0.5)
     # Graph the robot recycling
-    Main().robot_recycling()
+    Main().Robot_Recycling()
 

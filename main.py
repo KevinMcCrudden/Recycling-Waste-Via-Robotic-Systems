@@ -339,8 +339,16 @@ class Main:
         # Calculate corresponding y values for the trend line
         y_values = polynomial(x_values)
 
+        # Variables for the caluclation
+        robot_rate = 960 # Items per day
+        item_wieght = 0.5 # Pounds
+        number_of_items = df_combined['TONNAGE'].sum() * 2000 / item_wieght
+        recycling_rate = 0.19 # 19% of items that can actually be recycled
+        true_number_of_items = number_of_items * recycling_rate
+        print(true_number_of_items)
+
         # Add plot for both years on the same graph
-        f = figure(
+        f1 = figure(
             title="WPI Recycling Academic Year",
             x_axis_label="Months of the year",
             y_axis_label="Weight in Tons",
@@ -350,7 +358,7 @@ class Main:
             sizing_mode="stretch_both",
         )
 
-        bar1 = f.circle(
+        bar1 = f1.circle(
             x=Month,
             y=Tons,
             fill_alpha=0.5,
@@ -358,7 +366,7 @@ class Main:
         )
 
         # Add the polynomial trend line glyph to the plot
-        f.line(
+        f1.line(
             x_values, 
             y_values, 
             line_color='red', 
@@ -375,13 +383,13 @@ class Main:
         )
 
         # Add the legend to the plot
-        f.add_layout(legend, 'below')
+        f1.add_layout(legend, 'below')
 
         # Rotate the x-axis labels
-        f.xaxis.major_label_orientation = "vertical"
+        f1.xaxis.major_label_orientation = "vertical"
   
         # Show the result
-        show(f)
+        show(f1)
 
     def profitability(self):
         pass
@@ -400,7 +408,7 @@ if __name__ == "__main__":
     #Main().WPI_Waste_Monthly()
 
     # Graph the academic year
-    #Main().WPI_Waste_Academic_Year()
+    Main().WPI_Waste_Academic_Year()
 
     # Graph the robot recycling
     Main().robot_recycling()

@@ -131,22 +131,16 @@ class Main:
         monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
         monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
         
-        # Read the CSV file that was created by the helper class from 2022
+        # Read the CSV file that was created by the helper class from 2022 and 2023
         df_2022 = pd.read_csv(monthly_totals_2022)
-
-        # Read the CSV file that was created by the helper class from 2023
         df_2023 = pd.read_csv(monthly_totals_2023)
 
-        # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
+        # Assings the value of the column 'TONNAGE' to the variable Tons for 2022 and 2023
         Tons_2022 = df_2022['TONNAGE']
-
-        # Assings the value of the column 'Month' to the variable 'Month' for 2022
-        Month_2022 = df_2022['MONTH_STRING']
-
-        # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
         Tons_2023 = df_2023['TONNAGE']
 
-        # Assings the value of the column 'Month' to the variable 'Month' for 2022
+        # Assings the value of the column 'MONTH_STRING' to the variable Month for 2022 and 2023
+        Month_2022 = df_2022['MONTH_STRING']
         Month_2023 = df_2023['MONTH_STRING']
 
         # Add plot for 2022 year
@@ -223,10 +217,8 @@ class Main:
         monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
         monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
         
-        # Read the CSV file that was created by the helper class from 2022
+        # Read the CSV file that was created by the helper class from 2022 and 2023
         df_2022 = pd.read_csv(monthly_totals_2022)
-
-        # Read the CSV file that was created by the helper class from 2023
         df_2023 = pd.read_csv(monthly_totals_2023)
 
         # Concetenate the two years together
@@ -242,7 +234,7 @@ class Main:
         degree = 3  # Set the degree of the polynomial
         coefficients = np.polyfit(range(len(Tons)), Tons, degree)
         polynomial = np.poly1d(coefficients)
-        
+
         # Format the polynomial equation as a string
         equation_parts = []
         for deg, coef in enumerate(coefficients[::-1]):
@@ -307,7 +299,89 @@ class Main:
         show(f)
 
     def robot_recycling(self):
-        pass
+        # Set the CSV file for the montly totals
+        monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
+        monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
+        
+        # Read the CSV file that was created by the helper class from 2022 and 2023
+        df_2022 = pd.read_csv(monthly_totals_2022)
+        df_2023 = pd.read_csv(monthly_totals_2023)
+
+        # Concetenate the two years together
+        df_combined = pd.concat([df_2022, df_2023])
+
+        # Assings the value of the column 'TONNAGE' to the variable Tons
+        Tons = df_combined['TONNAGE']
+
+        # Assings the value of the column 'MONTH_STRING' to the variable Month
+        Month = df_combined['MONTH_STRING']
+
+        # Fit a polynomial to the data
+        degree = 3  # Set the degree of the polynomial
+        coefficients = np.polyfit(range(len(Tons)), Tons, degree)
+        polynomial = np.poly1d(coefficients)
+
+        # Format the polynomial equation as a string
+        equation_parts = []
+        for deg, coef in enumerate(coefficients[::-1]):
+            if deg == 0:
+                part = f"{coef:.2f}"
+            elif deg == 1:
+                part = f"{coef:+.2f}x"
+            else:
+                part = f"{coef:+.2f}x^{deg}"
+            equation_parts.append(part)
+        equation = "y = " + " ".join(equation_parts)
+
+        # Generate x values for the trend line
+        x_values = np.linspace(0, len(Tons), 100)
+
+        # Calculate corresponding y values for the trend line
+        y_values = polynomial(x_values)
+
+        # Add plot for both years on the same graph
+        f = figure(
+            title="WPI Recycling Academic Year",
+            x_axis_label="Months of the year",
+            y_axis_label="Weight in Tons",
+            x_range=Month,
+            y_range=(0, 100),
+            tools="pan,box_select,zoom_in,zoom_out,save,reset",
+            sizing_mode="stretch_both",
+        )
+
+        bar1 = f.circle(
+            x=Month,
+            y=Tons,
+            fill_alpha=0.5,
+            fill_color='blue',
+        )
+
+        # Add the polynomial trend line glyph to the plot
+        f.line(
+            x_values, 
+            y_values, 
+            line_color='red', 
+            line_width=2, 
+            legend_label=f'Polynomial Trend Line: {equation}'
+        )
+
+        # Add a legend for 2022
+        legend = Legend(
+            items=[(f"{df_combined['TONNAGE'].sum()} Tons", [bar1])],
+            location="center",
+            orientation="horizontal",
+            click_policy="hide"
+        )
+
+        # Add the legend to the plot
+        f.add_layout(legend, 'below')
+
+        # Rotate the x-axis labels
+        f.xaxis.major_label_orientation = "vertical"
+  
+        # Show the result
+        show(f)
 
     def profitability(self):
         pass
@@ -326,5 +400,8 @@ if __name__ == "__main__":
     #Main().WPI_Waste_Monthly()
 
     # Graph the academic year
-    Main().WPI_Waste_Academic_Year()
+    #Main().WPI_Waste_Academic_Year()
+
+    # Graph the robot recycling
+    Main().robot_recycling()
 

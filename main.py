@@ -128,29 +128,26 @@ class Main:
 
     def WPI_Waste_Monthly(self):
         # Set the CSV file for the montly totals
-        monthly_totals_2022 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022.csv'
-        monthly_totals_2023 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023.csv'
+        monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
+        monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
         
-        # Call the monthly_total function from the helper class
-        self.Tools.monthly_total(monthly_totals_2022, monthly_totals_2023)
-
         # Read the CSV file that was created by the helper class from 2022
-        df_2022 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022_monthly_totals.csv')
+        df_2022 = pd.read_csv(monthly_totals_2022)
 
         # Read the CSV file that was created by the helper class from 2023
-        df_2023 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023_monthly_totals.csv')
+        df_2023 = pd.read_csv(monthly_totals_2023)
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
         Tons_2022 = df_2022['TONNAGE']
 
         # Assings the value of the column 'Month' to the variable 'Month' for 2022
-        Month_2022 = df_2022['Month']
+        Month_2022 = df_2022['MONTH_STRING']
 
         # Assings the value of the column 'TONNAGE' to the variable 'Tons' for 2022
         Tons_2023 = df_2023['TONNAGE']
 
         # Assings the value of the column 'Month' to the variable 'Month' for 2022
-        Month_2023 = df_2023['Month']
+        Month_2023 = df_2023['MONTH_STRING']
 
         # Add plot for 2022 year
         f1 = figure(
@@ -316,7 +313,7 @@ if __name__ == "__main__":
     #Main().WPI_Waste()
 
     # Graph the monthly charts
-    #Main().WPI_Waste_Monthly()
+    Main().WPI_Waste_Monthly()
 
     # Graph the academic year
     #Main().WPI_Waste_Academic_Year()

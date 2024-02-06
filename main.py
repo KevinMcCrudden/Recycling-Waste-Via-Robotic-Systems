@@ -220,17 +220,14 @@ class Main:
 
     def WPI_Waste_Academic_Year(self):
         # Set the CSV file for the montly totals
-        monthly_totals_2022 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022.csv'
-        monthly_totals_2023 = '22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023.csv'
+        monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
+        monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
         
-        # Call the monthly_total function from the helper class
-        self.Tools.monthly_total(monthly_totals_2022, monthly_totals_2023)
-
         # Read the CSV file that was created by the helper class from 2022
-        df_2022 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2022_monthly_totals.csv')
+        df_2022 = pd.read_csv(monthly_totals_2022)
 
         # Read the CSV file that was created by the helper class from 2023
-        df_2023 = pd.read_csv('22_23_WPI_converted_month_names_sorted_location_date_duplicates_sum_2023_monthly_totals.csv')
+        df_2023 = pd.read_csv(monthly_totals_2023)
 
         # Concetenate the two years together
         df_combined = pd.concat([df_2022, df_2023])
@@ -239,7 +236,7 @@ class Main:
         Tons = df_combined['TONNAGE']
 
         # Assings the value of the column 'Month' to the variable 'Month'
-        Month = df_combined['Month']
+        Month = df_combined['MONTH_STRING']
 
         # Fit a polynomial to the data
         degree = 2  # Set the degree of the polynomial
@@ -313,8 +310,8 @@ if __name__ == "__main__":
     #Main().WPI_Waste()
 
     # Graph the monthly charts
-    Main().WPI_Waste_Monthly()
+    #Main().WPI_Waste_Monthly()
 
     # Graph the academic year
-    #Main().WPI_Waste_Academic_Year()
+    Main().WPI_Waste_Academic_Year()
 

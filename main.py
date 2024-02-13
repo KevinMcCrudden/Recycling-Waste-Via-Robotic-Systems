@@ -422,3 +422,8 @@ tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel, Robot_pan
 
 # Brings up the tabs for bokeh server
 curdoc().add_root(tabs)
+
+
+# Function to modify the document
+def modify_doc(doc):
+    doc.add_root(tabs)

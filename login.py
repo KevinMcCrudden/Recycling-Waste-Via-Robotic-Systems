@@ -65,4 +65,4 @@ Thread(target=bk_worker).start()
 
 if __name__ == '__main__':
     # Run the Flask app
-    app.run(port=8000, debug=True, host='0.0.0.0')
+    app.run(port=8000, debug=False, host='0.0.0.0')

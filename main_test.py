@@ -1,10 +1,8 @@
-from bokeh.plotting import figure, show
+from bokeh.plotting import figure, show, curdoc
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider
-import math
-import time
+from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel
 import pandas as pd
 import helper as Helper
 import numpy as np
@@ -75,18 +73,17 @@ source_2022 = ColumnDataSource(df_2022)
 source_2023 = ColumnDataSource(df_2023)
 
 # Add plot for 2022 year
-f1 = figure(
+Locations_2022 = figure(
     title="22 WPI Recycling",
     x_axis_label="Months of the year",
     y_axis_label="Weight in Tons",
     x_range=x_range_2022,
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode="stretch_both",
     
 )
 
 # Render glyph for 2022 year
-f1.vbar(
+Locations_2022.vbar(
     x='Location_Date',
     top='TONNAGE',
     width=0.9,
@@ -96,18 +93,17 @@ f1.vbar(
 )
 
 # Add plot for 2023 year
-f2 = figure(
+Locations_2023 = figure(
     title="23 WPI Recycling",
     x_axis_label="Months of the year",
     y_axis_label="Weight in Tons",
     x_range=x_range_2023,
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode="stretch_both",
     
 )
 
 # Render glyph for 2023 year
-f2.vbar(
+Locations_2023.vbar(
     x='Location_Date',
     top='TONNAGE',
     width=0.9,
@@ -117,14 +113,11 @@ f2.vbar(
 )
 
 # Rotate the x-axis labels
-f1.xaxis.major_label_orientation ="vertical"
-f2.xaxis.major_label_orientation ="vertical"
+Locations_2022.xaxis.major_label_orientation ="vertical"
+Locations_2023.xaxis.major_label_orientation ="vertical"
 
 # Combining plots 
-plots = row([f1,f2], sizing_mode="stretch_both")
-
-# Show results
-show(plots)
+plots_Locations = row([Locations_2022,Locations_2023], sizing_mode='scale_both')
 
 # Monthly Totals
 ########################################################################################
@@ -145,18 +138,17 @@ Month_2022 = df_2022['MONTH_STRING']
 Month_2023 = df_2023['MONTH_STRING']
 
 # Add plot for 2022 year
-f1 = figure(
+Monthly_2022 = figure(
     title="22 WPI Recycling Monthly",
     x_axis_label="Months of the year",
     y_axis_label="Weight in Tons",
     x_range=Month_2022,
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode="stretch_both",
     
 )
 
 # Render glyph for 2022 year
-bar1 = f1.vbar(
+bar1 = Monthly_2022.vbar(
     x=Month_2022,
     top=Tons_2022,
     fill_alpha=0.5,
@@ -172,21 +164,20 @@ legend_2022 = Legend(
 )
 
 # Add the legend to the plot
-f1.add_layout(legend_2022, 'below')
+Monthly_2022.add_layout(legend_2022, 'below')
 
 # Add plot for 2023 year
-f2 = figure(
+Monthly_2023 = figure(
     title="23 WPI Recycling Monthly",
     x_axis_label="Months of the year",
     y_axis_label="Weight in Tons",
     x_range=Month_2023,
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode="stretch_both",
     
 )
 
 # Render glyph for 2023 year
-bar2 = f2.vbar(
+bar2 = Monthly_2023.vbar(
     x=Month_2023,
     top=Tons_2023,
     fill_alpha=0.5,
@@ -201,17 +192,14 @@ legend_2023 = Legend(
 )
 
 # Add the legend to the plot
-f2.add_layout(legend_2023, 'below')
+Monthly_2023.add_layout(legend_2023, 'below')
 
 # Rotate the x-axis labels
-f1.xaxis.major_label_orientation ="vertical"
-f2.xaxis.major_label_orientation ="vertical"
+Monthly_2022.xaxis.major_label_orientation ="vertical"
+Monthly_2023.xaxis.major_label_orientation ="vertical"
 
 # Combining plots 
-plots = row([f1,f2], sizing_mode="stretch_both")
-
-# Show results
-show(plots)
+plots_monthly = row([Monthly_2022,Monthly_2023], sizing_mode='scale_both')
 
 # Academic Year Total with polynomial trend line
 ########################################################################################
@@ -256,18 +244,18 @@ x_values = np.linspace(0, len(Tons), 100)
 y_values = polynomial(x_values)
 
 # Add plot for both years on the same graph
-f = figure(
+academic_year = figure(
     title="WPI Recycling Academic Year",
     x_axis_label="Months of the year",
     y_axis_label="Weight in Tons",
     x_range=Month,
     y_range=(0, 100),
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode="stretch_both",
+    sizing_mode='scale_both'
 )
 
 # Render glyphs for 2022 year
-bar1 = f.vbar(
+bar1 = academic_year.vbar(
     x=Month,
     top=Tons,
     fill_alpha=0.5,
@@ -275,7 +263,7 @@ bar1 = f.vbar(
 )
 
 # Add the polynomial trend line glyph to the plot
-f.line(
+academic_year.line(
     x_values, 
     y_values, 
     line_color='red', 
@@ -292,13 +280,10 @@ legend = Legend(
 )
 
 # Add the legend to the plot
-f.add_layout(legend, 'below')
+academic_year.add_layout(legend, 'below')
 
 # Rotate the x-axis labels
-f.xaxis.major_label_orientation = "vertical"
-
-# Show the result
-show(f)
+academic_year.xaxis.major_label_orientation = "vertical"
 
 # Robot Calculation
 ########################################################################################
@@ -357,7 +342,6 @@ f1 = figure(
     x_range=Month,
     y_range=(0, 100),
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode="stretch_both",
 )
 
 bar1 = f1.circle(
@@ -390,5 +374,12 @@ f1.add_layout(legend, 'below')
 # Rotate the x-axis labels
 f1.xaxis.major_label_orientation = "vertical"
 
-# Show the result
-show(f1)
+# Shows all plots
+########################################################################################
+Locations_Panel = TabPanel(child=plots_Locations, title="WPI Recycling Locations")
+Monthly_panel = TabPanel(child=plots_monthly, title="22 WPI Recycling Monthly")
+Academic_Year_panel = TabPanel(child=academic_year, title="WPI Recycling Academic Year")
+
+tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel])
+
+show(tabs)

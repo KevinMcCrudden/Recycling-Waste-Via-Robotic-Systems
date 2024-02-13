@@ -382,4 +382,6 @@ Academic_Year_panel = TabPanel(child=academic_year, title="WPI Recycling Academi
 
 tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel])
 
-show(tabs)
+#show(tabs)
+
+curdoc().add_root(tabs)

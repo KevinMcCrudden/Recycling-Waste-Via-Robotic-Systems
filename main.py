@@ -423,18 +423,21 @@ Robot_Rate_Layout.sizing_mode = "scale_both"
 # # Brings up the tabs for bokeh server
 # curdoc().add_root(tabs)
 
-# Function to modify the document
-def modify_doc(doc):
-    # Define all the models directly here or outside this function and refer to them
-    Locations_Panel = TabPanel(child=plots_Locations, title="WPI Recycling Locations")
+# Example function to create models
+def create_models():
+    # Your code to create new models goes here
+    # For example, creating new Tabs
+    Locations_Panel = TabPanel(child=plots_Locations(), title="WPI Recycling Locations") 
     Monthly_panel = TabPanel(child=plots_monthly, title="22 WPI Recycling Monthly")
     Academic_Year_panel = TabPanel(child=academic_year, title="WPI Recycling Academic Year")
     Robot_panel = TabPanel(child=Robot_Rate_Layout, title="Robot Calculation")
 
-    tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel, Robot_panel])
-    
-    # Now add the tabs to the document
-    doc.add_root(tabs)
+    tabs = Tabs(tabs=[Locations_Panel, Monthly_panel(), Academic_Year_panel(), Robot_panel()])
+    return tabs
 
+# Updated modify_doc function
+def modify_doc(doc):
+    tabs = create_models()
+    doc.add_root(tabs)
 
 

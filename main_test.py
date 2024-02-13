@@ -327,6 +327,9 @@ x_values = np.linspace(0, len(Tons), 100)
 # Calculate corresponding y values for the trend line
 y_values = polynomial(x_values)
 
+# Define initial data source for the polynomial trend line
+source = ColumnDataSource(data={'x': x_values, 'y': y_values})
+
 # Variables for the caluclation
 robot_rate = 960 # Items per day
 item_wieght = 0.5 # Pounds
@@ -354,8 +357,9 @@ bar1 = Robot_rate.circle(
 
 # Add the polynomial trend line glyph to the plot
 Robot_rate.line(
-    x_values, 
-    y_values, 
+    x = 'x', 
+    y = 'y',
+    source = source, 
     line_color='red', 
     line_width=2, 
     legend_label=f'Polynomial Trend Line: {equation}'
@@ -374,6 +378,24 @@ Robot_rate.add_layout(legend, 'below')
 
 # Rotate the x-axis labels
 Robot_rate.xaxis.major_label_orientation = "vertical"
+
+# Slider stuff
+degree_slider = Slider(start=1, end=10, value=3, step=1, title="Degree of Polynomial")
+# Callback function for the slider
+
+def update_polynomial(attr, old, new):
+    # Calculate new polynomial coefficients and y-values
+    new_degree = degree_slider.value
+    new_coefficients = np.polyfit(range(len(Tons)), Tons, new_degree)
+    new_polynomial = np.poly1d(new_coefficients)
+    new_y_values = new_polynomial(x_values)
+
+    # Update the data source with new y-values
+    source.data = {'x': x_values, 'y': new_y_values}
+
+    # Optionally, update the legend label (if necessary)
+    Robot_rate.legend.items[0] = LegendItem(label=f'Polynomial Trend: Degree {new_degree}', renderers=[Robot_rate.renderers[1]])
+
 
 # Shows all plots
 ########################################################################################

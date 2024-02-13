@@ -10,5 +10,8 @@ This lists the services on a specific port
 To kill:
 kill -9 (PID)
 
+To find bokeh server on network:
+My IP: 10.0.4.103
+http://<Your-Server-IP>:5006/myapp
 
 

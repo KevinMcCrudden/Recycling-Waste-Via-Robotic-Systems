@@ -43,17 +43,26 @@ def logout():
 def bokeh_app():
     if 'username' not in session:
         return redirect(url_for('login'))
-    script = server_document('http://localhost:5006/bokeh_app')
+    script = server_document('http://localhost:5006/main')
     return render_template_string('<html><body>{{ script|safe }}</body></html>', script=script)
 
 def bk_worker():
-    server = Server({'/bokeh_app': modify_doc}, 
-                    io_loop=IOLoop(), 
-                    allow_websocket_origin=["10.0.4.103:5006"])
+    # Define Bokeh applications here, mapping URLs to Bokeh application callables:
+    bokeh_apps = {'/bokeh_app': modify_doc}
+
+    # Specify the address and the port for the Bokeh server
+    address = '10.0.4.103'
+    port = 5006
+    allow_websocket_origin = ["10.0.4.103:8000"]
+
+    # Create the Bokeh server with specified applications, address, port, and WebSocket origin
+    server = Server(bokeh_apps, io_loop=IOLoop(), address=address, port=port, allow_websocket_origin=allow_websocket_origin)
     server.start()
     server.io_loop.start()
 
+# Start the Bokeh server in a separate thread
 Thread(target=bk_worker).start()
 
 if __name__ == '__main__':
+    # Run the Flask app
     app.run(port=8000, debug=True, host='0.0.0.0')

@@ -2,7 +2,7 @@ from bokeh.plotting import figure, show
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem
+from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider
 import math
 import time
 import pandas as pd
@@ -404,13 +404,18 @@ if __name__ == "__main__":
 
     # Graph the yearly charts
     Main().WPI_Waste()
+
     time.sleep(0.5)
+
     # Graph the monthly charts
     Main().WPI_Waste_Monthly()
+
     time.sleep(0.5)
+
     # Graph the academic year
     Main().WPI_Waste_Academic_Year()
-    time.sleep(0.5)
-    # Graph the robot recycling
-    Main().Robot_Recycling()
 
+    time.sleep(0.5)
+
+    # Graph the robot recycling
+    #Main().Robot_Recycling()

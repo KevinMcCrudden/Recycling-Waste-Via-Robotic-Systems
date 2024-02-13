@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bokeh Plot</title>
+    <style>
+      html, body {
+        box-sizing: border-box;
+        display: flow-root;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.3.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+    <div id="f8cd25f2-ef6b-4c14-a1da-62ab0714df0d" data-root-id="p1254" style="display: contents;"></div>
+  
+    <script type="application/json" id="p1314">
+      {"68282725-ae5d-447b-b9a9-155a002a95ad":{"version":"3.3.3","title":"Bokeh Application","roots":[{"type":"object","name":"Figure","id":"p1254","attributes":{"sizing_mode":"stretch_both","x_range":{"type":"object","name":"FactorRange","id":"p1264","attributes":{"factors":["July","August","September","October","November","December","January","February","March","April","May","June"]}},"y_range":{"type":"object","name":"Range1d","id":"p1265","attributes":{"end":100}},"x_scale":{"type":"object","name":"CategoricalScale","id":"p1266"},"y_scale":{"type":"object","name":"LinearScale","id":"p1267"},"title":{"type":"object","name":"Title","id":"p1257","attributes":{"text":"WPI Recycling Academic Year"}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1295","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1289","attributes":{"selected":{"type":"object","name":"Selection","id":"p1290","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1291"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":["July","August","September","October","November","December","January","February","March","April","May","June"],"shape":[12],"dtype":"object","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"PQrXo3D9PUApXI/C9QhIQI/C9Shcb1ZAw/UoXI9iTECkcD0K16NTQAAAAAAAAE9AexSuR+FaS0BxPQrXo3BPQIXrUbgeJVFAuR6F61FIVEA0MzMzMxNCQDMzMzMzs0hA"},"shape":[12],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1296","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1297"}}},"glyph":{"type":"object","name":"Circle","id":"p1292","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"#1f77b4"},"fill_color":{"type":"value","value":"blue"},"fill_alpha":{"type":"value","value":0.5}}},"nonselection_glyph":{"type":"object","name":"Circle","id":"p1293","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"#1f77b4"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"blue"},"fill_alpha":{"type":"value","value":0.1},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Circle","id":"p1294","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":{"type":"value","value":"#1f77b4"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"blue"},"fill_alpha":{"type":"value","value":0.2},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p1304","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1298","attributes":{"selected":{"type":"object","name":"Selection","id":"p1299","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1300"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAAAAIH3zwwQe/PwgffPDBB88/RhdddNFF1z8IH3zwwQffP2WTTTbZZOM/RhdddNFF5z8nm2yyySbrPwgffPDBB+8/dNFFF1108T9lk0022WTzP1ZVVVVVVfU/RhdddNFF9z822WSTTTb5PyebbLLJJvs/GF100UUX/T8IH3zwwQf/P3zwwQcffABAdNFFF110AUBtsskmm2wCQGWTTTbZZANAXXTRRRddBEBWVVVVVVUFQE422WSTTQZARhdddNFFB0A++OCDDz4IQDbZZJNNNglAL7rooosuCkAnm2yyySYLQB988MEHHwxAGF100UUXDUAQPvjggw8OQAgffPDBBw9AAAAAAAAAEEB88MEHH3wQQPjggw8++BBAdNFFF110EUDxwQcffPARQG2yySabbBJA6aKLLrroEkBlk0022WQTQOGDDz744BNAXXTRRRddFEDZZJNNNtkUQFZVVVVVVRVA0kUXXXTRFUBONtlkk00WQMomm2yyyRZARhdddNFFF0DCBx988MEXQD744IMPPhhAuuiiiy66GEA22WSTTTYZQLPJJptsshlAL7rooosuGkCrqqqqqqoaQCebbLLJJhtAo4suuuiiG0AffPDBBx8cQJtssskmmxxAGF100UUXHUCUTTbZZJMdQBA++OCDDx5AjC666KKLHkAIH3zwwQcfQIQPPvjggx9AAAAAAAAAIEA++OCDDz4gQHzwwQcffCBAuuiiiy66IED44IMPPvggQDbZZJNNNiFAdNFFF110IUCzySabbLIhQPHBBx988CFAL7rooosuIkBtsskmm2wiQKuqqqqqqiJA6aKLLrroIkAnm2yyySYjQGWTTTbZZCNAo4suuuiiI0Dhgw8++OAjQB988MEHHyRAXXTRRRddJECbbLLJJpskQNlkk0022SRAF1100UUXJUBWVVVVVVUlQJRNNtlkkyVA0kUXXXTRJUAQPvjggw8mQE422WSTTSZAjC666KKLJkDKJptssskmQAgffPDBBydARhdddNFFJ0CEDz744IMnQMIHH3zwwSdAAAAAAAAAKEA="},"shape":[100],"dtype":"float64","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"ia/4iq8YQkBOXj6I5DFDQBl2WTV9QERA/cep3qJERUAQJY/Qfj5GQGVeaVc6LkdAEkWYv/4TSEAqqntV9e9IQMJec2VHwklA8DPfOx6LSkDG+h4lo0pLQFqEkm3/AExAv6GZYVyuTEAMJJRN41JNQFPc4X297k1AqZviPhSCTkAkM/bcEA1PQNZzfKTcj09Aa5fqcFAFUECcGrBwwz5QQAesvvdbdFBAODRGrC6mUEC4m3Y0UNRQQBHLfzbV/lBAzqqRWNIlUUB6I9xAXElRQJ4dj5WHaVFAxIHa/GiGUUB2OO4cFaBRQEEq+pugtlFArD8uICDKUUBCYbpPqNpRQI93ztBN6FFAHGuaSSXzUUByJE5gQ/tRQByMGbu8AFJApoosAKYDUkCaCLfVEwRSQH7u6OEaAlJA4iTyys/9UUBMlAI3R/dRQEklSsyV7lFAYMD4MNDjUUAgTj4LC9dRQA+3SgFbyFFAuONNudS3UUCovHfZjKVRQGYq+AeYkVFAfhX/6gp8UUB5Zrwo+mRRQOIFYGd6TFFARNwZTaAyUUAo0hmAgBdRQBjQj6Yv+1BAoL6rZsLdUEBIhp1mTb9QQJwPlUzln1BAJkPCvp5/UEBuCVVjjl5QQAJLfeDIPFBAaPBq3GIaUEBexJv64e5PQLwRrNIPqE9AAJpmjXhgT0A+Lit3RRhPQIqfWdyfz05A+75RCbGGTkCkXXNKoj1OQJhMHuyc9E1A7lyyOsqrTUC2X4+CU2NNQAwmFRBiG01A/YCjLx/UTECiQZottI1MQA45WVZKSExAWDhA9goETECLEK9ZH8FLQM6SBc2wf0tAIpCjnOg/S0Cm2egU8AFLQGlANYLwxUpAhJXoMBOMSkANqmJtgVRKQBJPA4RkH0pAqFUqweXsSUDtjjdxLr1JQOzLiuBnkElAud2DW7tmSUBulYIuUkBJQCDE5qVVHUlA3ToQDu/9SEDAyl6zR+JIQNZEMuKIykhAPHrq5tu2SEAEPOcNaqdIQD5biKNcnEhA/qgt9NyVSEBk9jZMFJRIQHIUBPgrl0hAS9T0Q02fSEA="},"shape":[100],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1305","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1306"}}},"glyph":{"type":"object","name":"Line","id":"p1301","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"red","line_width":2}},"nonselection_glyph":{"type":"object","name":"Line","id":"p1302","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"red","line_alpha":0.1,"line_width":2}},"muted_glyph":{"type":"object","name":"Line","id":"p1303","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"red","line_alpha":0.2,"line_width":2}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1263","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p1278"},{"type":"object","name":"BoxSelectTool","id":"p1279","attributes":{"renderers":"auto","overlay":{"type":"object","name":"BoxAnnotation","id":"p1280","attributes":{"syncable":false,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"editable":true,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"ZoomInTool","id":"p1285","attributes":{"renderers":"auto"}},{"type":"object","name":"ZoomOutTool","id":"p1286","attributes":{"renderers":"auto"}},{"type":"object","name":"SaveTool","id":"p1287"},{"type":"object","name":"ResetTool","id":"p1288"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1273","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1274","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1275"},"axis_label":"Weight in Tons","major_label_policy":{"type":"object","name":"AllLabels","id":"p1276"}}}],"below":[{"type":"object","name":"CategoricalAxis","id":"p1268","attributes":{"ticker":{"type":"object","name":"CategoricalTicker","id":"p1269"},"formatter":{"type":"object","name":"CategoricalTickFormatter","id":"p1270"},"axis_label":"Months of the year","major_label_orientation":"vertical","major_label_policy":{"type":"object","name":"AllLabels","id":"p1271"}}},{"type":"object","name":"Legend","id":"p1309","attributes":{"location":"center","orientation":"horizontal","click_policy":"hide","items":[{"type":"object","name":"LegendItem","id":"p1310","attributes":{"label":{"type":"value","value":"717.9799999999999 Tons"},"renderers":[{"id":"p1295"}]}}]}}],"center":[{"type":"object","name":"Grid","id":"p1272","attributes":{"axis":{"id":"p1268"}}},{"type":"object","name":"Grid","id":"p1277","attributes":{"dimension":1,"axis":{"id":"p1273"}}},{"type":"object","name":"Legend","id":"p1307","attributes":{"items":[{"type":"object","name":"LegendItem","id":"p1308","attributes":{"label":{"type":"value","value":"Polynomial Trend Line: y = 36.19 +18.47x -2.86x^2 +0.12x^3"},"renderers":[{"id":"p1304"}]}}]}}]}}]}}
+    </script>
+    <script type="text/javascript">
+      (function() {
+        const fn = function() {
+          Bokeh.safely(function() {
+            (function(root) {
+              function embed_document(root) {
+              const docs_json = document.getElementById('p1314').textContent;
+              const render_items = [{"docid":"68282725-ae5d-447b-b9a9-155a002a95ad","roots":{"p1254":"f8cd25f2-ef6b-4c14-a1da-62ab0714df0d"},"root_ids":["p1254"]}];
+              root.Bokeh.embed.embed_items(docs_json, render_items);
+              }
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+              } else {
+                let attempts = 0;
+                const timer = setInterval(function(root) {
+                  if (root.Bokeh !== undefined) {
+                    clearInterval(timer);
+                    embed_document(root);
+                  } else {
+                    attempts++;
+                    if (attempts > 100) {
+                      clearInterval(timer);
+                      console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                    }
+                  }
+                }, 10, root)
+              }
+            })(window);
+          });
+        };
+        if (document.readyState != "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
+      })();
+    </script>
+  </body>
+</html>

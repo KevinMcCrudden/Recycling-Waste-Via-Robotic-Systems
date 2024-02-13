@@ -1,0 +1,14 @@
+To run bokeh server in vscode:
+bokeh serve --show (name).py
+Usually it will run at:
+Default port is 5006
+http://localhost:(port)/myapp or http://localhost:(port)/
+
+To kill the process go to terminal or bash terminal in vscode:
+lsof -i tcp:(port)
+This lists the services on a specific port
+To kill:
+kill -9 (PID)
+
+
+

@@ -345,7 +345,6 @@ Robot_rate = figure(
     x_range=Month,
     y_range=(0, 100),
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    sizing_mode='scale_both'
 )
 
 bar1 = Robot_rate.circle(
@@ -380,9 +379,15 @@ Robot_rate.add_layout(legend, 'below')
 Robot_rate.xaxis.major_label_orientation = "vertical"
 
 # Slider stuff
-degree_slider = Slider(start=1, end=10, value=3, step=1, title="Degree of Polynomial")
-# Callback function for the slider
+degree_slider = Slider(
+    start=1, 
+    end=10, 
+    value=3, 
+    step=1, 
+    title="Degree of Polynomial"
+)
 
+# Callback function for the slider
 def update_polynomial(attr, old, new):
     # Calculate new polynomial coefficients and y-values
     new_degree = degree_slider.value
@@ -396,13 +401,22 @@ def update_polynomial(attr, old, new):
     # Optionally, update the legend label (if necessary)
     Robot_rate.legend.items[0] = LegendItem(label=f'Polynomial Trend: Degree {new_degree}', renderers=[Robot_rate.renderers[1]])
 
+# Attach the callback to the slider
+degree_slider.on_change('value', update_polynomial)
+
+# Created layout for slider and the plot
+Robot_Rate_Layout = column(degree_slider, Robot_rate)
+
+# Adjusts the size of the plot and slider
+Robot_Rate_Layout.sizing_mode = "scale_both"
+
 
 # Shows all plots
 ########################################################################################
 Locations_Panel = TabPanel(child=plots_Locations, title="WPI Recycling Locations")
 Monthly_panel = TabPanel(child=plots_monthly, title="22 WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=academic_year, title="WPI Recycling Academic Year")
-Robot_panel = TabPanel(child=Robot_rate, title="Robot Calculation")
+Robot_panel = TabPanel(child=Robot_Rate_Layout, title="Robot Calculation")
 
 tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel, Robot_panel])
 

@@ -43,7 +43,7 @@ def logout():
 def bokeh_app():
     if 'username' not in session:
         return redirect(url_for('login'))
-    script = server_document('http://localhost:5006/main')
+    script = server_document('http://10.0.4.103:5006/main')
     return render_template_string('<html><body>{{ script|safe }}</body></html>', script=script)
 
 def bk_worker():

@@ -335,16 +335,17 @@ recycling_rate = 0.19 # 19% of items that can actually be recycled
 true_number_of_items = number_of_items * recycling_rate
 
 # Add plot for both years on the same graph
-f1 = figure(
+Robot_rate = figure(
     title="WPI Recycling Academic Year",
     x_axis_label="Months of the year",
     y_axis_label="Weight in Tons",
     x_range=Month,
     y_range=(0, 100),
     tools="pan,box_select,zoom_in,zoom_out,save,reset",
+    sizing_mode='scale_both'
 )
 
-bar1 = f1.circle(
+bar1 = Robot_rate.circle(
     x=Month,
     y=Tons,
     fill_alpha=0.5,
@@ -352,7 +353,7 @@ bar1 = f1.circle(
 )
 
 # Add the polynomial trend line glyph to the plot
-f1.line(
+Robot_rate.line(
     x_values, 
     y_values, 
     line_color='red', 
@@ -369,19 +370,19 @@ legend = Legend(
 )
 
 # Add the legend to the plot
-f1.add_layout(legend, 'below')
+Robot_rate.add_layout(legend, 'below')
 
 # Rotate the x-axis labels
-f1.xaxis.major_label_orientation = "vertical"
+Robot_rate.xaxis.major_label_orientation = "vertical"
 
 # Shows all plots
 ########################################################################################
 Locations_Panel = TabPanel(child=plots_Locations, title="WPI Recycling Locations")
 Monthly_panel = TabPanel(child=plots_monthly, title="22 WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=academic_year, title="WPI Recycling Academic Year")
+Robot_panel = TabPanel(child=Robot_rate, title="Robot Calculation")
 
-tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel])
+tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel, Robot_panel])
 
-#show(tabs)
-
+# Brings up the tabs for bokeh server
 curdoc().add_root(tabs)

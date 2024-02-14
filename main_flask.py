@@ -79,7 +79,6 @@ def Locations():
         y_axis_label="Weight in Tons",
         x_range=x_range_2022,
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        sizing_mode="stretch_both",
         
     )
 
@@ -100,7 +99,6 @@ def Locations():
         y_axis_label="Weight in Tons",
         x_range=x_range_2023,
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        sizing_mode="stretch_both",
         
     )
 
@@ -119,7 +117,10 @@ def Locations():
     f2.xaxis.major_label_orientation ="vertical"
 
     # Combining plots 
-    plots = row([f1,f2], sizing_mode="stretch_both")
+    plots = row([f1,f2])
+
+    # Adjusts the size of the plot
+    plots.sizing_mode = "stretch_both"
 
     # Show results
     return plots
@@ -148,7 +149,6 @@ def Months():
         y_axis_label="Weight in Tons",
         x_range=Month_2022,
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        sizing_mode="stretch_both",
         
     )
 
@@ -178,7 +178,6 @@ def Months():
         y_axis_label="Weight in Tons",
         x_range=Month_2023,
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        sizing_mode="stretch_both",
         
     )
 
@@ -205,7 +204,10 @@ def Months():
     f2.xaxis.major_label_orientation ="vertical"
 
     # Combining plots 
-    plots = row([f1,f2], sizing_mode="stretch_both")
+    plots = row([f1,f2])
+
+    # Adjusts the size of the plot
+    plots.sizing_mode = "stretch_both"
 
     # Show results
     return plots
@@ -259,7 +261,6 @@ def Academic_Year():
         x_range=Month,
         y_range=(0, 100),
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
-        sizing_mode="stretch_both",
     )
 
     # Render glyphs for 2022 year
@@ -292,6 +293,9 @@ def Academic_Year():
 
     # Rotate the x-axis labels
     f.xaxis.major_label_orientation = "vertical"
+
+    # Adjusts the size of the plot
+    f.sizing_mode = "stretch_both"
 
     # Show the result
     return f

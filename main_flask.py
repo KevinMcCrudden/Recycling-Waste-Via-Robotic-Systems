@@ -51,7 +51,7 @@ raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_mo
 
 Tools.monthly_total(raw_csv_file_2022, raw_csv_file_2023)
 
-def Locations(self):
+def Locations():
     # Set the CSV file for the 2022 year and 2023
     output_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly.csv'
     output_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly.csv'
@@ -122,9 +122,9 @@ def Locations(self):
     plots = row([f1,f2], sizing_mode="stretch_both")
 
     # Show results
-    show(plots)
+    return plots
 
-def Months(self):
+def Months():
     # Set the CSV file for the montly totals
     monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
     monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
@@ -208,9 +208,9 @@ def Months(self):
     plots = row([f1,f2], sizing_mode="stretch_both")
 
     # Show results
-    show(plots)
+    return plots
 
-def Academic_Year(self):
+def Academic_Year():
     # Set the CSV file for the montly totals
     monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
     monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
@@ -294,15 +294,15 @@ def Academic_Year(self):
     f.xaxis.major_label_orientation = "vertical"
 
     # Show the result
-    show(f)
+    return f
 
-def Robot_Recycling(self):
+def Robot_Recycling():
     pass
 
-def profitability(self):
+def profitability():
     pass
 
-def roi(self):
+def roi():
     pass 
 
 # if __name__ == "__main__":
@@ -329,11 +329,11 @@ def roi(self):
 
 # Your code to create new models goes here
 # For example, creating new Tabs
-Locations_Panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
+Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
 Monthly_panel = TabPanel(child=Months(), title="22 WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
 
-tabs = Tabs(tabs=[Locations_Panel, Monthly_panel, Academic_Year_panel])
+tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel])
 
 # Brings up the tabs for bokeh server
 curdoc().add_root(tabs)

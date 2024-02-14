@@ -300,8 +300,133 @@ def Academic_Year():
     # Show the result
     return f1
 
-def Robot_Recycling():
-    pass
+def Robot_Rate():
+    # Set the CSV file for the montly totals
+    monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
+    monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
+
+    # Read the CSV file that was created by the helper class from 2022 and 2023
+    df_2022 = pd.read_csv(monthly_totals_2022)
+    df_2023 = pd.read_csv(monthly_totals_2023)
+
+    # Concetenate the two years together
+    df_combined = pd.concat([df_2022, df_2023])
+
+    # Assings the value of the column 'TONNAGE' to the variable Tons
+    Tons = df_combined['TONNAGE']
+
+    # Assings the value of the column 'MONTH_STRING' to the variable Month
+    Month = df_combined['MONTH_STRING']
+
+    # Fit a polynomial to the data
+    degree = 3  # Set the degree of the polynomial
+    coefficients = np.polyfit(range(len(Tons)), Tons, degree)
+    polynomial = np.poly1d(coefficients)
+
+    # Format the polynomial equation as a string
+    equation_parts = []
+    for deg, coef in enumerate(coefficients[::-1]):
+        if deg == 0:
+            part = f"{coef:.2f}"
+        elif deg == 1:
+            part = f"{coef:+.2f}x"
+        else:
+            part = f"{coef:+.2f}x^{deg}"
+        equation_parts.append(part)
+    equation = "y = " + " ".join(equation_parts)
+
+    # Generate x values for the trend line
+    x_values = np.linspace(0, len(Tons), 100)
+
+    # Calculate corresponding y values for the trend line
+    y_values = polynomial(x_values)
+
+    # Define initial data source for the polynomial trend line
+    source = ColumnDataSource(data={'x': x_values, 'y': y_values})
+
+    # Variables for the caluclation
+    robot_rate = 960 # Items per day
+    item_wieght = 0.5 # Pounds
+    number_of_items = df_combined['TONNAGE'].sum() * 2000 / item_wieght
+    recycling_rate = 0.19 # 19% of items that can actually be recycled
+    true_number_of_items = number_of_items * recycling_rate
+
+    # Add plot for both years on the same graph
+    Robot_rate = figure(
+        title="WPI Recycling Academic Year",
+        x_axis_label="Months of the year",
+        y_axis_label="Weight in Tons",
+        x_range=Month,
+        y_range=(0, 100),
+        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+    )
+
+    bar1 = Robot_rate.circle(
+        x=Month,
+        y=Tons,
+        fill_alpha=0.5,
+        fill_color='blue',
+    )
+
+    # Add the polynomial trend line glyph to the plot
+    Robot_rate.line(
+        x = 'x', 
+        y = 'y',
+        source = source, 
+        line_color='red', 
+        line_width=2, 
+        legend_label=f'Polynomial Trend Line: {equation}'
+    )
+
+    # Add a legend for 2022
+    legend = Legend(
+        items=[(f"{df_combined['TONNAGE'].sum()} Tons", [bar1])],
+        location="center",
+        orientation="horizontal",
+        click_policy="hide"
+    )
+
+    # Add the legend to the plot
+    Robot_rate.add_layout(legend, 'below')
+
+    # Rotate the x-axis labels
+    Robot_rate.xaxis.major_label_orientation = "vertical"
+
+    # Slider stuff
+    degree_slider = Slider(
+        start=1, 
+        end=10, 
+        value=3, 
+        step=1, 
+        title="Degree of Polynomial"
+    )
+
+    # Callback function for the slider
+    def update_polynomial(attr, old, new):
+        # Calculate new polynomial coefficients and y-values
+        new_degree = degree_slider.value
+        new_coefficients = np.polyfit(range(len(Tons)), Tons, new_degree)
+        new_polynomial = np.poly1d(new_coefficients)
+        new_y_values = new_polynomial(x_values)
+
+        # Update the data source with new y-values
+        source.data = {'x': x_values, 'y': new_y_values}
+
+        # Optionally, update the legend label (if necessary)
+        Robot_rate.legend.items[0] = LegendItem(label=f'Polynomial Trend: Degree {new_degree}', renderers=[Robot_rate.renderers[1]])
+
+    # Attach the callback to the slider
+    degree_slider.on_change('value', update_polynomial)
+
+    # Created layout for slider and the plot
+    Robot_Rate_Layout = column(degree_slider, Robot_rate)
+
+    # Adjusts the size of the plot and slider
+    Robot_Rate_Layout.sizing_mode = "scale_both"
+    
+    # Show the result
+    return Robot_Rate_Layout
+
 
 def profitability():
     pass
@@ -314,8 +439,9 @@ def roi():
 Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
 Monthly_panel = TabPanel(child=Months(), title="22 WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
+Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
 
-tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel])
+tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Robot_Rate_panel])
 
 # Brings up the tabs for bokeh server
 curdoc().add_root(tabs)

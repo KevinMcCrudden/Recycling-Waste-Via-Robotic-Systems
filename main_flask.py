@@ -437,7 +437,7 @@ def roi():
 # Your code to create new models goes here
 # For example, creating new Tabs
 Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
-Monthly_panel = TabPanel(child=Months(), title="22 WPI Recycling Monthly")
+Monthly_panel = TabPanel(child=Months(), title="WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
 Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
 

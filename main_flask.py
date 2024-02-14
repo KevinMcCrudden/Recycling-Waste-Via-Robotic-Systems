@@ -254,7 +254,7 @@ def Academic_Year():
     y_values = polynomial(x_values)
 
     # Add plot for both years on the same graph
-    f = figure(
+    f1 = figure(
         title="WPI Recycling Academic Year",
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
@@ -264,7 +264,7 @@ def Academic_Year():
     )
 
     # Render glyphs for 2022 year
-    bar1 = f.vbar(
+    bar1 = f1.vbar(
         x=Month,
         top=Tons,
         fill_alpha=0.5,
@@ -272,7 +272,7 @@ def Academic_Year():
     )
 
     # Add the polynomial trend line glyph to the plot
-    f.line(
+    f1.line(
         x_values, 
         y_values, 
         line_color='red', 
@@ -289,16 +289,16 @@ def Academic_Year():
     )
 
     # Add the legend to the plot
-    f.add_layout(legend, 'below')
+    f1.add_layout(legend, 'below')
 
     # Rotate the x-axis labels
-    f.xaxis.major_label_orientation = "vertical"
+    f1.xaxis.major_label_orientation = "vertical"
 
     # Adjusts the size of the plot
-    f.sizing_mode = "stretch_both"
+    f1.sizing_mode = "stretch_both"
 
     # Show the result
-    return f
+    return f1
 
 def Robot_Recycling():
     pass
@@ -308,28 +308,6 @@ def profitability():
 
 def roi():
     pass 
-
-# if __name__ == "__main__":
-#     # Run init
-#     Main().__init__
-
-#     # Graph the yearly charts
-#     Main().WPI_Waste()
-
-#     time.sleep(0.5)
-
-#     # Graph the monthly charts
-#     Main().WPI_Waste_Monthly()
-
-#     time.sleep(0.5)
-
-#     # Graph the academic year
-#     Main().WPI_Waste_Academic_Year()
-
-#     time.sleep(0.5)
-
-#     # Graph the robot recycling
-#     #Main().Robot_Recycling()
 
 # Your code to create new models goes here
 # For example, creating new Tabs

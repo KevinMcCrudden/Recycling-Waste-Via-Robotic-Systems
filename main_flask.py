@@ -444,4 +444,17 @@ Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
 tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Robot_Rate_panel])
 
 # Brings up the tabs for bokeh server
-curdoc().add_root(tabs)
+#curdoc().add_root(tabs)
+
+# Function to modify the document
+def modify_doc(doc):
+    # Define all the models directly here or outside this function and refer to them
+    Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
+    Monthly_panel = TabPanel(child=Months(), title="WPI Recycling Monthly")
+    Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
+    Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
+
+    tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Robot_Rate_panel])
+
+    # Now add the tabs to the document
+    doc.add_root(tabs)

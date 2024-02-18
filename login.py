@@ -39,7 +39,7 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-@app.route('/bokeh_app')
+@app.route('/bokeh_app', methods=['GET'])
 def bokeh_app():
     if 'username' not in session:
         return redirect(url_for('login'))
@@ -53,7 +53,7 @@ def bk_worker():
     # Specify the address and the port for the Bokeh server
     address = '10.0.4.103'
     port = 5006
-    allow_websocket_origin = ["10.0.4.103:5006"]
+    allow_websocket_origin = ["10.0.4.103:5006", "127.0.0.1:8000"]
 
     # Create the Bokeh server with specified applications, address, port, and WebSocket origin
     server = Server(bokeh_apps, io_loop=IOLoop(), address=address, port=port, allow_websocket_origin=allow_websocket_origin)
@@ -65,4 +65,4 @@ Thread(target=bk_worker).start()
 
 if __name__ == '__main__':
     # Run the Flask app
-    app.run(port=8000, debug=True, host='0.0.0.0')
+    app.run(port=8000, debug=False, host='0.0.0.0')

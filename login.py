@@ -43,7 +43,7 @@ def logout():
 def bokeh_app():
     if 'username' not in session:
         return redirect(url_for('login'))
-    script = server_document('http://10.0.4.103:5006/bokeh_app')
+    script = server_document('http://130.215.212.4:5006/bokeh_app')
     return render_template_string('<html><body>{{ script|safe }}</body></html>', script=script)
 
 def bk_worker():
@@ -51,9 +51,9 @@ def bk_worker():
     bokeh_apps = {'/bokeh_app': modify_doc}
 
     # Specify the address and the port for the Bokeh server
-    address = '10.0.4.103'
+    address = '130.215.212.4'
     port = 5006
-    allow_websocket_origin = ["10.0.4.103:5006", "127.0.0.1:8000"]
+    allow_websocket_origin = ["130.215.212.4:5006", "127.0.0.1:8000"]
 
     # Create the Bokeh server with specified applications, address, port, and WebSocket origin
     server = Server(bokeh_apps, io_loop=IOLoop(), address=address, port=port, allow_websocket_origin=allow_websocket_origin)

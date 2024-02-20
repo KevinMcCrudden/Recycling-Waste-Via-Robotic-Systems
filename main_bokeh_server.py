@@ -435,12 +435,12 @@ def Robot_Rate():
 
     # Create a new plot for the robot_rate graph
     robot_rate_line = figure(
-            title="Daily Recyclable Items",
-            x_axis_type="datetime",
-            x_axis_label='Date',
-            y_axis_label='Recyclable Items',
-            plot_width=800, plot_height=400
-        )
+        title="Daily Recyclable Items",
+        x_axis_type="datetime",
+        x_axis_label='Date',
+        y_axis_label='Recyclable Items',
+        plot_width=800, plot_height=400
+    )
     
     # Add a line renderer for the robot_rate_line
     robot_rate_line.line(
@@ -448,7 +448,7 @@ def Robot_Rate():
         source=source_robot, 
         line_width=2, 
         line_color='green'
-        )
+    )
 
      # Created layout for slider and the plot
     Robot_Rate_Layout = column(degree_slider, Robot_rate, robot_rate_line)

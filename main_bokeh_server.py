@@ -301,6 +301,11 @@ def Academic_Year():
     return f1
 
 def Robot_Rate():
+    # Variables for the caluclation
+    robot_rate = 960 # Items per day
+    item_weight = 0.5 # Pounds
+    recycling_rate = 0.19 # 19% of items that can actually be recycled
+
     # Set the CSV file for the montly totals
     monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
     monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
@@ -317,6 +322,22 @@ def Robot_Rate():
 
     # Assings the value of the column 'MONTH_STRING' to the variable Month
     Month = df_combined['MONTH_STRING']
+
+    # Calculate the daily totals
+    # For demonstration, we'll simulate this step
+    df_combined['Date'] = pd.to_datetime(df_combined['MONTH_STRING'], format='%Y-%m')
+    df_combined['DaysInMonth'] = df_combined['Date'].dt.daysinmonth
+    df_combined['DailyTonnage'] = df_combined['TONNAGE'] / df_combined['DaysInMonth']
+
+    # Calculate daily recyclable items
+    df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
+
+    # Prepare data for Bokeh
+    x_values = pd.date_range(start=df_combined['Date'].min(), end=df_combined['Date'].max(), freq='D')
+    # Interpolate daily values 
+    daily_recyclable_items = np.interp(x_values, df_combined['Date'], df_combined['DailyRecyclableItems'])
+
+    source_robot = ColumnDataSource(data={'x': x_values, 'y': daily_recyclable_items})
 
     # Fit a polynomial to the data
     degree = 3  # Set the degree of the polynomial
@@ -342,15 +363,9 @@ def Robot_Rate():
     y_values = polynomial(x_values)
 
     # Define initial data source for the polynomial trend line
-    source = ColumnDataSource(data={'x': x_values, 'y': y_values})
+    source_polynomial = ColumnDataSource(data={'x': x_values, 'y': y_values})
 
-    # Variables for the caluclation
-    robot_rate = 960 # Items per day
-    item_wieght = 0.5 # Pounds
-    number_of_items = df_combined['TONNAGE'].sum() * 2000 / item_wieght
-    recycling_rate = 0.19 # 19% of items that can actually be recycled
-    true_number_of_items = number_of_items * recycling_rate
-
+    
     # Add plot for both years on the same graph
     Robot_rate = figure(
         title="WPI Recycling Academic Year",
@@ -372,13 +387,13 @@ def Robot_Rate():
     Robot_rate.line(
         x = 'x', 
         y = 'y',
-        source = source, 
+        source = source_polynomial, 
         line_color='red', 
         line_width=2, 
         legend_label=f'Polynomial Trend Line: {equation}'
     )
 
-    # Add a legend for 2022
+    # Add a legend for the acdemic year
     legend = Legend(
         items=[(f"{df_combined['TONNAGE'].sum()} Tons", [bar1])],
         location="center",
@@ -410,7 +425,7 @@ def Robot_Rate():
         new_y_values = new_polynomial(x_values)
 
         # Update the data source with new y-values
-        source.data = {'x': x_values, 'y': new_y_values}
+        source_polynomial.data = {'x': x_values, 'y': new_y_values}
 
         # Optionally, update the legend label (if necessary)
         Robot_rate.legend.items[0] = LegendItem(label=f'Polynomial Trend: Degree {new_degree}', renderers=[Robot_rate.renderers[1]])
@@ -418,17 +433,35 @@ def Robot_Rate():
     # Attach the callback to the slider
     degree_slider.on_change('value', update_polynomial)
 
-    # Created layout for slider and the plot
-    Robot_Rate_Layout = column(degree_slider, Robot_rate)
+    # Create a new plot for the robot_rate graph
+    robot_rate_line = figure(
+            title="Daily Recyclable Items",
+            x_axis_type="datetime",
+            x_axis_label='Date',
+            y_axis_label='Recyclable Items',
+            plot_width=800, plot_height=400
+        )
+    
+    # Add a line renderer for the robot_rate_line
+    robot_rate_line.line(
+        x='x', y='y', 
+        source=source_robot, 
+        line_width=2, 
+        line_color='green'
+        )
+
+     # Created layout for slider and the plot
+    Robot_Rate_Layout = column(degree_slider, Robot_rate, robot_rate_line)
 
     # Adjusts the size of the plot and slider
     Robot_Rate_Layout.sizing_mode = "scale_both"
-    
+
     # Show the result
     return Robot_Rate_Layout
 
 
 def profitability():
+
     pass
 
 def roi():

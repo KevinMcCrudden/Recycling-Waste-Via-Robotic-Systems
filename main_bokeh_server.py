@@ -325,15 +325,17 @@ def Robot_Rate():
 
     # Calculate the daily totals
     # For demonstration, we'll simulate this step
-    df_combined['Date'] = pd.to_datetime(df_combined['MONTH_STRING'], format='%Y-%m')
+    df_combined['Date'] = pd.to_datetime(df_combined['MONTH_STRING'] + " 2024", format='%B %Y')
     df_combined['DaysInMonth'] = df_combined['Date'].dt.daysinmonth
     df_combined['DailyTonnage'] = df_combined['TONNAGE'] / df_combined['DaysInMonth']
 
     # Calculate daily recyclable items
     df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
 
+    ## Calclations for the robot rate line
     # Prepare data for Bokeh
     x_values = pd.date_range(start=df_combined['Date'].min(), end=df_combined['Date'].max(), freq='D')
+
     # Interpolate daily values 
     daily_recyclable_items = np.interp(x_values, df_combined['Date'], df_combined['DailyRecyclableItems'])
 
@@ -376,9 +378,9 @@ def Robot_Rate():
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
     )
 
-    bar1 = Robot_rate.circle(
+    bar1 = Robot_rate.vbar(
         x=Month,
-        y=Tons,
+        top=Tons,
         fill_alpha=0.5,
         fill_color='blue',
     )
@@ -388,9 +390,18 @@ def Robot_Rate():
         x = 'x', 
         y = 'y',
         source = source_polynomial, 
-        line_color='red', 
-        line_width=2, 
-        legend_label=f'Polynomial Trend Line: {equation}'
+        line_color = 'red', 
+        line_width = 2, 
+        legend_label = f'Polynomial Trend Line: {equation}'
+    )
+
+    # Add a line glyph for the robot_rate calculation
+    Robot_rate.line(
+        x = 'x', 
+        y = 'y', 
+        source = source_robot, 
+        line_width = 2, 
+        line_color = 'green'
     )
 
     # Add a legend for the acdemic year
@@ -403,9 +414,6 @@ def Robot_Rate():
 
     # Add the legend to the plot
     Robot_rate.add_layout(legend, 'below')
-
-    # Rotate the x-axis labels
-    Robot_rate.xaxis.major_label_orientation = "vertical"
 
     # Slider stuff
     degree_slider = Slider(
@@ -433,28 +441,14 @@ def Robot_Rate():
     # Attach the callback to the slider
     degree_slider.on_change('value', update_polynomial)
 
-    # Create a new plot for the robot_rate graph
-    robot_rate_line = figure(
-        title="Daily Recyclable Items",
-        x_axis_type="datetime",
-        x_axis_label='Date',
-        y_axis_label='Recyclable Items',
-        plot_width=800, plot_height=400
-    )
-    
-    # Add a line renderer for the robot_rate_line
-    robot_rate_line.line(
-        x='x', y='y', 
-        source=source_robot, 
-        line_width=2, 
-        line_color='green'
-    )
-
-     # Created layout for slider and the plot
-    Robot_Rate_Layout = column(degree_slider, Robot_rate, robot_rate_line)
+    ## Graph adjustments
+    Robot_Rate_Layout = column([Robot_rate, degree_slider])
 
     # Adjusts the size of the plot and slider
-    Robot_Rate_Layout.sizing_mode = "scale_both"
+    Robot_Rate_Layout.sizing_mode = "stretch_both"
+
+    # Rotate the x-axis labels
+    Robot_rate.xaxis.major_label_orientation = "vertical"
 
     # Show the result
     return Robot_Rate_Layout

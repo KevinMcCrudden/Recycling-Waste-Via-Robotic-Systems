@@ -73,7 +73,7 @@ def Locations():
     source_2023 = ColumnDataSource(df_2023)
 
     # Add plot for 2022 year
-    f1 = figure(
+    Locations_Plot_2022 = figure(
         title="22 WPI Recycling",
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
@@ -83,7 +83,7 @@ def Locations():
     )
 
     # Render glyph for 2022 year
-    f1.vbar(
+    Locations_Plot_2022.vbar(
         x='Location_Date',
         top='TONNAGE',
         width=0.9,
@@ -93,7 +93,7 @@ def Locations():
     )
 
     # Add plot for 2023 year
-    f2 = figure(
+    Locations_Plot_2023 = figure(
         title="23 WPI Recycling",
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
@@ -103,7 +103,7 @@ def Locations():
     )
 
     # Render glyph for 2023 year
-    f2.vbar(
+    Locations_Plot_2023.vbar(
         x='Location_Date',
         top='TONNAGE',
         width=0.9,
@@ -113,11 +113,11 @@ def Locations():
     )
 
     # Rotate the x-axis labels
-    f1.xaxis.major_label_orientation ="vertical"
-    f2.xaxis.major_label_orientation ="vertical"
+    Locations_Plot_2022.xaxis.major_label_orientation ="vertical"
+    Locations_Plot_2023.xaxis.major_label_orientation ="vertical"
 
     # Combining plots 
-    plots = row([f1,f2])
+    plots = row([Locations_Plot_2022,Locations_Plot_2023])
 
     # Adjusts the size of the plot
     plots.sizing_mode = "stretch_both"
@@ -143,7 +143,7 @@ def Months():
     Month_2023 = df_2023['MONTH_STRING']
 
     # Add plot for 2022 year
-    f1 = figure(
+    Months_Plot_2022 = figure(
         title="22 WPI Recycling Monthly",
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
@@ -153,7 +153,7 @@ def Months():
     )
 
     # Render glyph for 2022 year
-    bar1 = f1.vbar(
+    bar1 = Months_Plot_2022.vbar(
         x=Month_2022,
         top=Tons_2022,
         fill_alpha=0.5,
@@ -169,10 +169,10 @@ def Months():
     )
 
     # Add the legend to the plot
-    f1.add_layout(legend_2022, 'below')
+    Months_Plot_2022.add_layout(legend_2022, 'below')
 
     # Add plot for 2023 year
-    f2 = figure(
+    Months_Plot_2023 = figure(
         title="23 WPI Recycling Monthly",
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
@@ -182,7 +182,7 @@ def Months():
     )
 
     # Render glyph for 2023 year
-    bar2 = f2.vbar(
+    bar2 = Months_Plot_2023.vbar(
         x=Month_2023,
         top=Tons_2023,
         fill_alpha=0.5,
@@ -197,14 +197,14 @@ def Months():
     )
 
     # Add the legend to the plot
-    f2.add_layout(legend_2023, 'below')
+    Months_Plot_2023.add_layout(legend_2023, 'below')
 
     # Rotate the x-axis labels
-    f1.xaxis.major_label_orientation ="vertical"
-    f2.xaxis.major_label_orientation ="vertical"
+    Months_Plot_2022.xaxis.major_label_orientation ="vertical"
+    Months_Plot_2023.xaxis.major_label_orientation ="vertical"
 
     # Combining plots 
-    plots = row([f1,f2])
+    plots = row([Months_Plot_2022,Months_Plot_2023])
 
     # Adjusts the size of the plot
     plots.sizing_mode = "stretch_both"
@@ -253,8 +253,11 @@ def Academic_Year():
     # Calculate corresponding y values for the trend line
     y_values = polynomial(x_values)
 
+    # Define initial data source for the polynomial trend line
+    source_polynomial = ColumnDataSource(data={'x': x_values, 'y': y_values})
+
     # Add plot for both years on the same graph
-    f1 = figure(
+    Academic_Year_Plot = figure(
         title="WPI Recycling Academic Year",
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
@@ -263,8 +266,8 @@ def Academic_Year():
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
     )
 
-    # Render glyphs for 2022 year
-    bar1 = f1.vbar(
+    # Render glyphs for academic year
+    bar1 = Academic_Year_Plot.vbar(
         x=Month,
         top=Tons,
         fill_alpha=0.5,
@@ -272,15 +275,17 @@ def Academic_Year():
     )
 
     # Add the polynomial trend line glyph to the plot
-    f1.line(
-        x_values, 
-        y_values, 
-        line_color='red', 
+    # Add the polynomial trend line glyph to the plot
+    Academic_Year_Plot.line(
+        x = 'x', 
+        y = 'y',
+        source = source_polynomial, 
+        line_color='green', 
         line_width=2, 
         legend_label=f'Polynomial Trend Line: {equation}'
     )
 
-    # Add a legend for 2022
+    # Add a legend for the total at the bottom
     legend = Legend(
         items=[(f"{df_combined['TONNAGE'].sum()} Tons", [bar1])],
         location="center",
@@ -288,17 +293,44 @@ def Academic_Year():
         click_policy="hide"
     )
 
-    # Add the legend to the plot
-    f1.add_layout(legend, 'below')
+     # Add the legend to the plot
+    Academic_Year_Plot.add_layout(legend, 'below')
 
+    # Define a slider for the degree of the polynomial
+    degree_slider = Slider(
+        start=1, 
+        end=10, 
+        value=3, 
+        step=1, 
+        title="Degree of Polynomial"
+    )
+
+    # Callback function for the slider
+    def update_polynomial(attr, old, new):
+        # Calculate new polynomial coefficients and y-values
+        new_degree = degree_slider.value
+        new_coefficients = np.polyfit(range(len(Tons)), Tons, new_degree)
+        new_polynomial = np.poly1d(new_coefficients)
+        new_y_values = new_polynomial(x_values)
+
+        # Update the data source with new y-values
+        source_polynomial.data = {'x': x_values, 'y': new_y_values}
+
+    # Attach the callback to the slider
+    degree_slider.on_change('value', update_polynomial)
+
+    ## Graph adjustments
     # Rotate the x-axis labels
-    f1.xaxis.major_label_orientation = "vertical"
+    Academic_Year_Plot.xaxis.major_label_orientation = "vertical"
+
+    # Combine the plot and slider into a layout
+    Academic_Year_Layout = row([Academic_Year_Plot, degree_slider])
 
     # Adjusts the size of the plot
-    f1.sizing_mode = "stretch_both"
+    #Academic_Year.sizing_mode = "stretch_both"
 
     # Show the result
-    return f1
+    return Academic_Year_Layout
 
 def Robot_Rate():
     # Variables for the caluclation
@@ -339,120 +371,14 @@ def Robot_Rate():
     # Interpolate daily values 
     daily_recyclable_items = np.interp(x_values, df_combined['Date'], df_combined['DailyRecyclableItems'])
 
-    source_robot = ColumnDataSource(data={'x': x_values, 'y': daily_recyclable_items})
-
-    # Fit a polynomial to the data
-    degree = 3  # Set the degree of the polynomial
-    coefficients = np.polyfit(range(len(Tons)), Tons, degree)
-    polynomial = np.poly1d(coefficients)
-
-    # Format the polynomial equation as a string
-    equation_parts = []
-    for deg, coef in enumerate(coefficients[::-1]):
-        if deg == 0:
-            part = f"{coef:.2f}"
-        elif deg == 1:
-            part = f"{coef:+.2f}x"
-        else:
-            part = f"{coef:+.2f}x^{deg}"
-        equation_parts.append(part)
-    equation = "y = " + " ".join(equation_parts)
-
-    # Generate x values for the trend line
-    x_values = np.linspace(0, len(Tons), 100)
-
-    # Calculate corresponding y values for the trend line
-    y_values = polynomial(x_values)
-
-    # Define initial data source for the polynomial trend line
-    source_polynomial = ColumnDataSource(data={'x': x_values, 'y': y_values})
-
-    
-    # Add plot for both years on the same graph
-    Robot_rate = figure(
-        title="WPI Recycling Academic Year",
-        x_axis_label="Months of the year",
-        y_axis_label="Weight in Tons",
-        x_range=Month,
-        y_range=(0, 100),
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
-    )
-
-    bar1 = Robot_rate.vbar(
-        x=Month,
-        top=Tons,
-        fill_alpha=0.5,
-        fill_color='blue',
-    )
-
-    # Add the polynomial trend line glyph to the plot
-    Robot_rate.line(
-        x = 'x', 
-        y = 'y',
-        source = source_polynomial, 
-        line_color = 'red', 
-        line_width = 2, 
-        legend_label = f'Polynomial Trend Line: {equation}'
-    )
-
-    # Add a line glyph for the robot_rate calculation
-    Robot_rate.line(
-        x = 'x', 
-        y = 'y', 
-        source = source_robot, 
-        line_width = 2, 
-        line_color = 'green'
-    )
-
-    # Add a legend for the acdemic year
-    legend = Legend(
-        items=[(f"{df_combined['TONNAGE'].sum()} Tons", [bar1])],
-        location="center",
-        orientation="horizontal",
-        click_policy="hide"
-    )
-
-    # Add the legend to the plot
-    Robot_rate.add_layout(legend, 'below')
-
-    # Slider stuff
-    degree_slider = Slider(
-        start=1, 
-        end=10, 
-        value=3, 
-        step=1, 
-        title="Degree of Polynomial"
-    )
-
-    # Callback function for the slider
-    def update_polynomial(attr, old, new):
-        # Calculate new polynomial coefficients and y-values
-        new_degree = degree_slider.value
-        new_coefficients = np.polyfit(range(len(Tons)), Tons, new_degree)
-        new_polynomial = np.poly1d(new_coefficients)
-        new_y_values = new_polynomial(x_values)
-
-        # Update the data source with new y-values
-        source_polynomial.data = {'x': x_values, 'y': new_y_values}
-
-        # Optionally, update the legend label (if necessary)
-        Robot_rate.legend.items[0] = LegendItem(label=f'Polynomial Trend: Degree {new_degree}', renderers=[Robot_rate.renderers[1]])
-
-    # Attach the callback to the slider
-    degree_slider.on_change('value', update_polynomial)
-
-    ## Graph adjustments
-    Robot_Rate_Layout = column([Robot_rate, degree_slider])
-
     # Adjusts the size of the plot and slider
-    Robot_Rate_Layout.sizing_mode = "stretch_both"
+    Robot_Rate.sizing_mode = "stretch_both"
 
     # Rotate the x-axis labels
-    Robot_rate.xaxis.major_label_orientation = "vertical"
+    Robot_Rate.xaxis.major_label_orientation = "vertical"
 
     # Show the result
-    return Robot_Rate_Layout
-
+    return Robot_Rate
 
 def profitability():
 
@@ -466,9 +392,9 @@ def roi():
 Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
 Monthly_panel = TabPanel(child=Months(), title="WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
-Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
+#Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
 
-tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Robot_Rate_panel])
+tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel])
 
 # Add the layout to the current document
 curdoc().add_root(tabs)

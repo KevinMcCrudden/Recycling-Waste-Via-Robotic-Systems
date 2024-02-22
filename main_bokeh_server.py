@@ -2,7 +2,7 @@ from bokeh.plotting import figure, show, curdoc
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel, Div
+from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel, Div, DatetimeTickFormatter
 import pandas as pd
 import helper as Helper
 import numpy as np
@@ -378,6 +378,11 @@ def Robot_Rate():
     return Robot_Rate
 
 def test():
+    # Variables for the caluclation
+    robot_rate = 960 # Items per day
+    item_weight = 0.5 # Pounds
+    recycling_rate = 0.19 # 19% of items that can actually be recycled
+    
     # Simulated data creation
     dates_2022 = pd.date_range(start="2022-01-01", end="2022-12-31", freq='M')
     dates_2023 = pd.date_range(start="2023-01-01", end="2023-12-31", freq='M')
@@ -392,6 +397,30 @@ def test():
         'TONNAGE': tonnage
     })
 
+    # Assuming a total of 700 tons for the academic years
+    total_tonnage = 700
+
+    # Number of months across the two years
+    num_months = len(dates_2022) + len(dates_2023)
+
+    # Evenly distribute the total tonnage across all months
+    tonnage_per_month = total_tonnage / num_months
+
+    # Assign the tonnage per month to each month in the DataFrame
+    df_combined['TONNAGE'] = tonnage_per_month
+
+    # Recalculate daily tonnage based on the new tonnage values
+    df_combined['DailyTonnage'] = df_combined['TONNAGE'] / 30
+
+    # Recalculate daily recyclable items based on the initial recycling rate
+    df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
+
+    # Prepare data for Bokeh plotting
+    source = ColumnDataSource(df_combined)
+
+    # Update the data source with the new calculations
+    source.data = ColumnDataSource.from_df(df_combined)
+
     # Assuming each month has 30 days for simplicity in this simulation
     df_combined['DailyTonnage'] = df_combined['TONNAGE'] / 30
 
@@ -402,11 +431,8 @@ def test():
     # Calculate daily recyclable items
     df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
 
-    # Prepare data for Bokeh plotting
-    source = ColumnDataSource(df_combined)
-
     # Create a Bokeh plot
-    plot = figure(title="Daily Recyclable Items Sorted by Robot", x_axis_type="datetime", plot_width=800, plot_height=400)
+    plot = figure(title="Daily Recyclable Items Sorted by Robot", x_axis_type="datetime", width=800, height=400)
     plot.line('Date', 'DailyRecyclableItems', source=source, legend_label="Daily Recyclable Items", color="green")
     plot.circle('Date', 'DailyRecyclableItems', source=source, fill_color="white", size=8)
 
@@ -421,7 +447,7 @@ def test():
     num_robots_slider = Slider(start=1, end=10, value=1, step=1, title="Number of Robots")
     downtime_slider = Slider(start=0, end=100, value=0, step=1, title="Robot Downtime (%)")
 
-    # Define the update function
+    # Define the update function to use the new tonnage values
     def update(attr, old, new):
         # Adjust recycling rate based on slider
         recycling_rate = recycling_rate_slider.value
@@ -432,11 +458,11 @@ def test():
         # Adjust for downtime
         downtime_adjustment = 1 - (downtime_slider.value / 100)
         
-        # Recalculate daily recyclable items
+        # Recalculate daily recyclable items with the new parameters
         new_daily_recyclable_items = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate * num_robots * downtime_adjustment
         source.data['DailyRecyclableItems'] = new_daily_recyclable_items
 
-    # Attach the update function to the sliders
+    # Ensure to reattach the update function if it's defined before this point
     recycling_rate_slider.on_change('value', update)
     num_robots_slider.on_change('value', update)
     downtime_slider.on_change('value', update)
@@ -459,8 +485,9 @@ Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations")
 Monthly_panel = TabPanel(child=Months(), title="WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
 #Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
+Test_panel = TabPanel(child=test(), title="Test")
 
-tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel])
+tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Test_panel])
 
 # Add the layout to the current document
 curdoc().add_root(tabs)

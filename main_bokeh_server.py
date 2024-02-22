@@ -235,18 +235,6 @@ def Academic_Year():
     coefficients = np.polyfit(range(len(Tons)), Tons, degree)
     polynomial = np.poly1d(coefficients)
 
-    # Format the polynomial equation as a string
-    equation_parts = []
-    for deg, coef in enumerate(coefficients[::-1]):
-        if deg == 0:
-            part = f"{coef:.2f}"
-        elif deg == 1:
-            part = f"{coef:+.2f}x"
-        else:
-            part = f"{coef:+.2f}x^{deg}"
-        equation_parts.append(part)
-    equation = "y = " + " ".join(equation_parts)
-
     # Generate x values for the trend line
     x_values = np.linspace(0, len(Tons), 100)
 
@@ -303,34 +291,31 @@ def Academic_Year():
         title="Degree of Polynomial"
     )
 
+
+    # Initial polynomial equation for display
+    equation_parts = [f"{coeff:.2f}x^{i}" if i > 0 else f"{coeff:.2f}" for i, coeff in enumerate(coefficients[::-1])]
+    equation = "y = " + " + ".join(equation_parts)
+
     # Define a Div for the polynomial equation
     equation_div = Div(text=f"Polynomial Trend Line: {equation}", width=400, height=30)
 
     def update_polynomial(attr, old, new):
-        # Calculate new polynomial coefficients and y-values
+        # Recalculate polynomial and update plot based on slider
         new_degree = degree_slider.value
         new_coefficients = np.polyfit(range(len(Tons)), Tons, new_degree)
         new_polynomial = np.poly1d(new_coefficients)
         new_y_values = new_polynomial(x_values)
-
-        # Update the data source with new y-values
-        source_polynomial.data = {'x': x_values, 'y': new_y_values}
-
-        # Recalculate the polynomial equation string
-        new_equation_parts = []
-        for deg, coef in enumerate(new_coefficients[::-1]):
-            if deg == 0:
-                part = f"{coef:.2f}"
-            elif deg == 1:
-                part = f"{coef:+.2f}x"
-            else:
-                part = f"{coef:+.2f}x^{deg}"
-            new_equation_parts.append(part)
-        new_equation = "y = " + " ".join(new_equation_parts)
+        
+        # Update source data for the line
+        source_polynomial.data.update({'x': x_values, 'y': new_y_values})
+        
+        # Update the polynomial equation display
+        new_equation_parts = [f"{coeff:.2f}x^{i}" if i > 0 else f"{coeff:.2f}" for i, coeff in enumerate(new_coefficients[::-1])]
+        new_equation = "y = " + " + ".join(new_equation_parts)
         equation_div.text = f"Polynomial Trend Line: {new_equation}"
 
-        # Update the legend label to display the new polynomial equation
-        Academic_Year_Plot.legend.items[1] = LegendItem(label=f'Polynomial Trend Line: {new_equation}', renderers=[glyph1])
+    # Link the slider to the update function
+    degree_slider.on_change('value', update_polynomial)
 
     # Attach the callback to the slider
     degree_slider.on_change('value', update_polynomial)
@@ -343,7 +328,7 @@ def Academic_Year():
     Academic_Year_Layout = column([Academic_Year_Plot, degree_slider, equation_div])
 
     # Adjusts the size of the plot
-    Academic_Year.sizing_mode = "stretch_both"
+    Academic_Year_Layout.sizing_mode = "stretch_both"
 
     # Show the result
     return Academic_Year_Layout

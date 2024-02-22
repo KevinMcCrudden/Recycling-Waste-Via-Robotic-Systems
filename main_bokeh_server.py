@@ -2,7 +2,7 @@ from bokeh.plotting import figure, show, curdoc
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel
+from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel, Div
 import pandas as pd
 import helper as Helper
 import numpy as np
@@ -275,14 +275,12 @@ def Academic_Year():
     )
 
     # Add the polynomial trend line glyph to the plot
-    # Add the polynomial trend line glyph to the plot
-    Academic_Year_Plot.line(
+    glyph1 = Academic_Year_Plot.line(
         x = 'x', 
         y = 'y',
         source = source_polynomial, 
         line_color='green', 
-        line_width=2, 
-        legend_label=f'Polynomial Trend Line: {equation}'
+        line_width=2,
     )
 
     # Add a legend for the total at the bottom
@@ -305,7 +303,9 @@ def Academic_Year():
         title="Degree of Polynomial"
     )
 
-    # Callback function for the slider
+    # Define a Div for the polynomial equation
+    equation_div = Div(text=f"Polynomial Trend Line: {equation}", width=400, height=30)
+
     def update_polynomial(attr, old, new):
         # Calculate new polynomial coefficients and y-values
         new_degree = degree_slider.value
@@ -316,6 +316,22 @@ def Academic_Year():
         # Update the data source with new y-values
         source_polynomial.data = {'x': x_values, 'y': new_y_values}
 
+        # Recalculate the polynomial equation string
+        new_equation_parts = []
+        for deg, coef in enumerate(new_coefficients[::-1]):
+            if deg == 0:
+                part = f"{coef:.2f}"
+            elif deg == 1:
+                part = f"{coef:+.2f}x"
+            else:
+                part = f"{coef:+.2f}x^{deg}"
+            new_equation_parts.append(part)
+        new_equation = "y = " + " ".join(new_equation_parts)
+        equation_div.text = f"Polynomial Trend Line: {new_equation}"
+
+        # Update the legend label to display the new polynomial equation
+        Academic_Year_Plot.legend.items[1] = LegendItem(label=f'Polynomial Trend Line: {new_equation}', renderers=[glyph1])
+
     # Attach the callback to the slider
     degree_slider.on_change('value', update_polynomial)
 
@@ -324,10 +340,10 @@ def Academic_Year():
     Academic_Year_Plot.xaxis.major_label_orientation = "vertical"
 
     # Combine the plot and slider into a layout
-    Academic_Year_Layout = row([Academic_Year_Plot, degree_slider])
+    Academic_Year_Layout = column([Academic_Year_Plot, degree_slider, equation_div])
 
     # Adjusts the size of the plot
-    #Academic_Year.sizing_mode = "stretch_both"
+    Academic_Year.sizing_mode = "stretch_both"
 
     # Show the result
     return Academic_Year_Layout

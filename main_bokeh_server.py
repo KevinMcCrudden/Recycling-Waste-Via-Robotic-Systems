@@ -337,11 +337,12 @@ def Academic_Year():
 
 def Robot_Rate():
     # Variables for the caluclation
-    robot_rate = 960 # Items per day
+    robot_rate = 40 # Items per hour
+    hours_per_day = 24 # Hours
     item_weight = 0.5 # Pounds
     recycling_rate = 0.19 # 19% of items that can actually be recycled
     robot_uptime = 0.90 # 90% uptime
-
+    
     # Set the CSV file for the montly totals
     combined = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total_combined.csv'
 

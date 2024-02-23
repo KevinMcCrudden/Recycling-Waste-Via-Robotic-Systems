@@ -207,13 +207,13 @@ class MyClass:
 
         # Combine the two DataFrames
         combined_df = pd.concat([df_2022, df_2023], ignore_index=True)
+        
+        # Assign the number of days in each month to a new column
+        combined_df['DAYS_IN_MONTH'] = combined_df['MONTH_STRING'].apply(lambda month: pd.Period(month).days_in_month)
 
         # Save the combined DataFrame to a new CSV file
         combined_file = raw_csv_file_2022.replace('.csv', '_combined.csv')
         combined_df.to_csv(combined_file, index=False)
-
-        # Assign the number of days in each month to a new column
-        combined_df['DAYS_IN_MONTH'] = combined_df['MONTH_STRING'].apply(lambda month: pd.Period(month).days_in_month)
 
         return combined_file
     

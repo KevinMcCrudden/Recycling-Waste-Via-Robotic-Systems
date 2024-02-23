@@ -126,7 +126,7 @@ def Locations():
     plots = row([Locations_Plot_2022,Locations_Plot_2023])
 
     # Adjusts the size of the plot
-    plots.sizing_mode = "stretch_both"
+    plots.sizing_mode = "scale_both"
 
     # Show results
     return plots
@@ -213,7 +213,7 @@ def Months():
     plots = row([Months_Plot_2022,Months_Plot_2023])
 
     # Adjusts the size of the plot
-    plots.sizing_mode = "stretch_both"
+    plots.sizing_mode = "scale_both"
 
     # Show results
     return plots
@@ -330,7 +330,7 @@ def Academic_Year():
     Academic_Year_Layout = column([Academic_Year_Plot, degree_slider, equation_div])
 
     # Adjusts the size of the plot
-    Academic_Year_Layout.sizing_mode = "stretch_both"
+    Academic_Year_Layout.sizing_mode = "scale_both"
 
     # Show the result
     return Academic_Year_Layout
@@ -354,14 +354,31 @@ def Robot_Rate():
     # Assings the value of the column 'MONTH_STRING' to the variable Month
     Month = df['MONTH_STRING']
 
+    # Creates plot for the robot rate
+    Robot_Rate_Plot = figure(
+        title="Robot Rate",
+        x_axis_label="Months of the year",
+        y_axis_label="Weight in Tons",
+        x_range=Month,
+        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+    )
+
+    # Render glyph for the amount of recycling for each month
+    bar1 = Robot_Rate_Plot.vbar(
+        x=Month,
+        top=Tons,
+        fill_alpha=0.5,
+        fill_color='red',
+    )
+
     # Adjusts the size of the plot and slider
-    Robot_Rate.sizing_mode = "stretch_both"
+    Robot_Rate_Plot.sizing_mode = "scale_both"
 
     # Rotate the x-axis labels
-    Robot_Rate.xaxis.major_label_orientation = "vertical"
+    Robot_Rate_Plot.xaxis.major_label_orientation = "vertical"
 
     # Show the result
-    return Robot_Rate
+    return Robot_Rate_Plot
 
 def profitability():
 
@@ -375,9 +392,9 @@ def roi():
 Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations") 
 Monthly_panel = TabPanel(child=Months(), title="WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
-#Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
+Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
 
-tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel])
+tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Robot_Rate_panel])
 
 # Add the layout to the current document
 curdoc().add_root(tabs)

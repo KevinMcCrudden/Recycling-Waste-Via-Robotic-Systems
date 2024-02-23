@@ -200,6 +200,23 @@ class MyClass:
 
         return file_2022, file_2023
     
+    def combine(self, raw_csv_file_2022, raw_csv_file_2023):
+        # Read the input CSV files
+        df_2022 = pd.read_csv(raw_csv_file_2022)
+        df_2023 = pd.read_csv(raw_csv_file_2023)
+
+        # Combine the two DataFrames
+        combined_df = pd.concat([df_2022, df_2023], ignore_index=True)
+
+        # Save the combined DataFrame to a new CSV file
+        combined_file = raw_csv_file_2022.replace('.csv', '_combined.csv')
+        combined_df.to_csv(combined_file, index=False)
+
+        # Assign the number of days in each month to a new column
+        combined_df['DAYS_IN_MONTH'] = combined_df['MONTH_STRING'].apply(lambda month: pd.Period(month).days_in_month)
+
+        return combined_file
+    
 
 if __name__ == "__main__":
     pass

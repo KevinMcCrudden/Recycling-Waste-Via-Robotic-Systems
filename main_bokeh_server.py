@@ -51,6 +51,12 @@ raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_mo
 
 Tools.monthly_total(raw_csv_file_2022, raw_csv_file_2023)
 
+# Combines the two files for 2022 and 2023
+raw_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
+raw_csv_file_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
+
+Tools.combine(raw_csv_file_2022, raw_csv_file_2023)
+
 def Locations():
     # Set the CSV file for the 2022 year and 2023
     output_csv_file_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly.csv'
@@ -334,39 +340,19 @@ def Robot_Rate():
     robot_rate = 960 # Items per day
     item_weight = 0.5 # Pounds
     recycling_rate = 0.19 # 19% of items that can actually be recycled
+    robot_uptime = 0.90 # 90% uptime
 
     # Set the CSV file for the montly totals
-    monthly_totals_2022 = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total.csv'
-    monthly_totals_2023 = '22_23_WPI_month_sorted_location_row_clean_2023_processed_monthly_total.csv'
+    combined = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total_combined.csv'
 
     # Read the CSV file that was created by the helper class from 2022 and 2023
-    df_2022 = pd.read_csv(monthly_totals_2022)
-    df_2023 = pd.read_csv(monthly_totals_2023)
-
-    # Concetenate the two years together
-    df_combined = pd.concat([df_2022, df_2023])
+    df = pd.read_csv(combined)
 
     # Assings the value of the column 'TONNAGE' to the variable Tons
-    Tons = df_combined['TONNAGE']
+    Tons = df['TONNAGE']
 
     # Assings the value of the column 'MONTH_STRING' to the variable Month
-    Month = df_combined['MONTH_STRING']
-
-    # Calculate the daily totals
-    # For demonstration, we'll simulate this step
-    df_combined['Date'] = pd.to_datetime(df_combined['MONTH_STRING'] + " 2024", format='%B %Y')
-    df_combined['DaysInMonth'] = df_combined['Date'].dt.daysinmonth
-    df_combined['DailyTonnage'] = df_combined['TONNAGE'] / df_combined['DaysInMonth']
-
-    # Calculate daily recyclable items
-    df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
-
-    ## Calclations for the robot rate line
-    # Prepare data for Bokeh
-    x_values = pd.date_range(start=df_combined['Date'].min(), end=df_combined['Date'].max(), freq='D')
-
-    # Interpolate daily values 
-    daily_recyclable_items = np.interp(x_values, df_combined['Date'], df_combined['DailyRecyclableItems'])
+    Month = df['MONTH_STRING']
 
     # Adjusts the size of the plot and slider
     Robot_Rate.sizing_mode = "stretch_both"
@@ -376,101 +362,6 @@ def Robot_Rate():
 
     # Show the result
     return Robot_Rate
-
-def test():
-    # Variables for the caluclation
-    robot_rate = 960 # Items per day
-    item_weight = 0.5 # Pounds
-    recycling_rate = 0.19 # 19% of items that can actually be recycled
-    
-    # Simulated data creation
-    dates_2022 = pd.date_range(start="2022-01-01", end="2022-12-31", freq='M')
-    dates_2023 = pd.date_range(start="2023-01-01", end="2023-12-31", freq='M')
-    tonnage = np.random.uniform(50, 150, size=(len(dates_2022) + len(dates_2023))) # Random tonnage between 50 and 150 tons
-
-    # Correcting the concatenation mistake by converting DatetimeIndex to list
-    dates_combined = pd.concat([pd.Series(dates_2022), pd.Series(dates_2023)]).reset_index(drop=True)
-
-    # Correct DataFrame creation
-    df_combined = pd.DataFrame({
-        'Date': dates_combined,
-        'TONNAGE': tonnage
-    })
-
-    # Assuming a total of 700 tons for the academic years
-    total_tonnage = 700
-
-    # Number of months across the two years
-    num_months = len(dates_2022) + len(dates_2023)
-
-    # Evenly distribute the total tonnage across all months
-    tonnage_per_month = total_tonnage / num_months
-
-    # Assign the tonnage per month to each month in the DataFrame
-    df_combined['TONNAGE'] = tonnage_per_month
-
-    # Recalculate daily tonnage based on the new tonnage values
-    df_combined['DailyTonnage'] = df_combined['TONNAGE'] / 30
-
-    # Recalculate daily recyclable items based on the initial recycling rate
-    df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
-
-    # Prepare data for Bokeh plotting
-    source = ColumnDataSource(df_combined)
-
-    # Update the data source with the new calculations
-    source.data = ColumnDataSource.from_df(df_combined)
-
-    # Assuming each month has 30 days for simplicity in this simulation
-    df_combined['DailyTonnage'] = df_combined['TONNAGE'] / 30
-
-    # Variables for the calculation
-    item_weight = 0.5 # Pounds
-    recycling_rate = 0.19 # 19% of items that can actually be recycled
-
-    # Calculate daily recyclable items
-    df_combined['DailyRecyclableItems'] = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate
-
-    # Create a Bokeh plot
-    plot = figure(title="Daily Recyclable Items Sorted by Robot", x_axis_type="datetime", width=800, height=400)
-    plot.line('Date', 'DailyRecyclableItems', source=source, legend_label="Daily Recyclable Items", color="green")
-    plot.circle('Date', 'DailyRecyclableItems', source=source, fill_color="white", size=8)
-
-    # Format the plot
-    plot.xaxis.formatter = DatetimeTickFormatter(months="%b %Y")
-    plot.xaxis.major_label_orientation = np.pi/4
-    plot.yaxis.axis_label = "Daily Recyclable Items"
-    plot.legend.location = "top_left"
-
-    # Create sliders
-    recycling_rate_slider = Slider(start=0, end=1, value=0.19, step=0.01, title="Recycling Rate")
-    num_robots_slider = Slider(start=1, end=10, value=1, step=1, title="Number of Robots")
-    downtime_slider = Slider(start=0, end=100, value=0, step=1, title="Robot Downtime (%)")
-
-    # Define the update function to use the new tonnage values
-    def update(attr, old, new):
-        # Adjust recycling rate based on slider
-        recycling_rate = recycling_rate_slider.value
-        
-        # Adjust for number of robots
-        num_robots = num_robots_slider.value
-        
-        # Adjust for downtime
-        downtime_adjustment = 1 - (downtime_slider.value / 100)
-        
-        # Recalculate daily recyclable items with the new parameters
-        new_daily_recyclable_items = df_combined['DailyTonnage'] * 2000 / item_weight * recycling_rate * num_robots * downtime_adjustment
-        source.data['DailyRecyclableItems'] = new_daily_recyclable_items
-
-    # Ensure to reattach the update function if it's defined before this point
-    recycling_rate_slider.on_change('value', update)
-    num_robots_slider.on_change('value', update)
-    downtime_slider.on_change('value', update)
-
-    # Layout setup
-    layout = column(plot, recycling_rate_slider, num_robots_slider, downtime_slider)
-
-    return layout
 
 def profitability():
 
@@ -485,9 +376,8 @@ Locations_panel = TabPanel(child=Locations(), title="WPI Recycling Locations")
 Monthly_panel = TabPanel(child=Months(), title="WPI Recycling Monthly")
 Academic_Year_panel = TabPanel(child=Academic_Year(), title="WPI Recycling Academic Year")
 #Robot_Rate_panel = TabPanel(child=Robot_Rate(), title="Robot Rate")
-Test_panel = TabPanel(child=test(), title="Test")
 
-tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel, Test_panel])
+tabs = Tabs(tabs=[Locations_panel, Monthly_panel, Academic_Year_panel])
 
 # Add the layout to the current document
 curdoc().add_root(tabs)

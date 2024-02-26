@@ -2,7 +2,7 @@ from bokeh.plotting import figure, show, curdoc
 from bokeh.layouts import column, row
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Category10
-from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel, Div, DatetimeTickFormatter
+from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, TableColumn, LegendItem, Slider, Tabs, TabPanel, Div, DatetimeTickFormatter, Range1d, LinearAxis
 import pandas as pd
 import helper as Helper
 import numpy as np
@@ -367,7 +367,10 @@ def Robot_Rate():
 
     # Calculate daily recycling weight for each day in the month
     daily_recycling_weight_per_month = daily_recycling_weight * Days
-    
+
+    # Create a ColumnDataSource for your glyphs to use
+    source = ColumnDataSource(data=dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month))
+
     # Creates plot for the robot rate
     Robot_Rate_Plot = figure(
         title="Robot Rate",
@@ -377,21 +380,31 @@ def Robot_Rate():
         tools="pan,box_select,zoom_in,zoom_out,save,reset",
     )
 
+    # Creates a second y-axis
+    Robot_Rate_Plot.extra_y_ranges = {"robot_rate_axis": Range1d(start=0, end=3)} # Adjust the range as needed
+    Robot_Rate_Plot.add_layout(LinearAxis(y_range_name="robot_rate_axis", axis_label="Robot Rate (tons/day)"), 'right')
+
+    # Rotate the x-axis labels
+    Robot_Rate_Plot.xaxis.major_label_orientation = "vertical"
+
     # Render glyph for the amount of recycling for each month
     bar1 = Robot_Rate_Plot.vbar(
-        x=Month,
-        top=Tons,
-        fill_alpha=0.5,
+        x ='x',
+        top ='tons',
+        source=source,
+        fill_alpha=0.8,
         fill_color='red',
     )
 
     # Render glyph for the amount of recycling for each month
     bar2 = Robot_Rate_Plot.line(
-        Month,
-        daily_recycling_weight_per_month,
+        x='x',
+        y = 'daily_recycling_weight_per_month',
+        source=source,
         line_color='blue',
         line_width=2,
-        legend_label="Daily Recycling Weight"
+        legend_label="Daily Recycling Weight", 
+        y_range_name="robot_rate_axis"
     )
 
     # Initialize the sliders
@@ -419,23 +432,17 @@ def Robot_Rate():
         new_data = {'x': Month, 'y': daily_recycling_weight_per_month}
         source.data = new_data
 
+        # Update the source with new data
+        source.data = dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month)
+
     # Attach the update function to the sliders
     robot_rate_slider.on_change('value', update)
     number_of_robots_slider.on_change('value', update)
     recycling_rate_slider.on_change('value', update)
     robot_uptime_slider.on_change('value', update)
 
-    # Assuming you have a ColumnDataSource for your plot called source
-    source = ColumnDataSource(data=dict(x=[], y=[]))
-
     # Add the plot and sliders to the document
-    layout = column(robot_rate_slider, number_of_robots_slider, recycling_rate_slider, robot_uptime_slider, Robot_Rate_Plot)
-
-    # Adjusts the size of the plot and slider
-    layout.sizing_mode = "scale_both"
-
-    # Rotate the x-axis labels
-    layout.xaxis.major_label_orientation = "vertical"\
+    layout = column(number_of_robots_slider, robot_rate_slider, recycling_rate_slider, robot_uptime_slider, Robot_Rate_Plot)
     
     # Show the result
     return layout

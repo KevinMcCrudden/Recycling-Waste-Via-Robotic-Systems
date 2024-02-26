@@ -429,9 +429,8 @@ def Robot_Rate():
         daily_recycling_weight_per_month = daily_recycling_weight * Days
         
         # Update the data source for the plot
-        new_data = {'x': Month, 'y': daily_recycling_weight_per_month}
-        source.data = new_data
-
+        source.data = {'x': Month, 'y': daily_recycling_weight_per_month}
+        
         # Update the source with new data
         source.data = dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month)
 

@@ -336,13 +336,6 @@ def Academic_Year():
     return Academic_Year_Layout
 
 def Robot_Rate():
-    # Variables for the caluclation
-    robot_rate = 40 # Items per hour
-    hours_per_day = 24 # Hours
-    item_weight = 0.5 # Individual item weight in pounds
-    recycling_rate = 0.19 # 19% of items that can actually be recycled
-    robot_uptime = 0.90 # 90% uptime
-    
     # Set the CSV file for the montly totals
     combined = '22_23_WPI_month_sorted_location_row_clean_2022_processed_monthly_total_combined.csv'
 
@@ -358,6 +351,23 @@ def Robot_Rate():
     # Assigns the value of the column 'DAYS_IN_MONTH' to Days
     Days = df['DAYS_IN_MONTH']
 
+    # Variables for the caluclation
+    robot_rate = 40 # Items per hour
+    hours_per_day = 24 # Hours
+    item_weight = 0.5 # Individual item weight in pounds
+    recycling_rate = 0.19 # 19% of items that can actually be recycled
+    robot_uptime = 0.90 # 90% uptime
+    pounds_per_ton = 2000 # Pounds per ton
+    
+    # Calculate the total weight of items processed per day
+    daily_processed_weight = robot_rate * hours_per_day * item_weight * robot_uptime
+
+    # Calculate the daily recycling rate in tons (since 1 ton = 2000 pounds)
+    daily_recycling_weight = daily_processed_weight * recycling_rate / 2000
+
+    # Calculate daily recycling weight for each day in the month
+    daily_recycling_weight_per_month = daily_recycling_weight * Days
+    
     # Creates plot for the robot rate
     Robot_Rate_Plot = figure(
         title="Robot Rate",
@@ -375,14 +385,60 @@ def Robot_Rate():
         fill_color='red',
     )
 
+    # Render glyph for the amount of recycling for each month
+    bar2 = Robot_Rate_Plot.line(
+        Month,
+        daily_recycling_weight_per_month,
+        line_color='blue',
+        line_width=2,
+        legend_label="Daily Recycling Weight"
+    )
+
+    # Initialize the sliders
+    robot_rate_slider = Slider(start=10, end=100, value=40, step=1, title="Robot Rate (items per hour)")
+    number_of_robots_slider = Slider(start=1, end=10, value=1, step=1, title="Number of Robots")
+    recycling_rate_slider = Slider(start=0.1, end=1.0, value=0.19, step=0.01, title="Recycling Rate")
+    robot_uptime_slider = Slider(start=0.5, end=1.0, value=0.90, step=0.01, title="Robot Uptime")
+
+    # Define the callback function
+    def update(attr, old, new):
+        # Update variables based on sliders' values
+        robot_rate = robot_rate_slider.value
+        number_of_robots = number_of_robots_slider.value
+        recycling_rate = recycling_rate_slider.value
+        robot_uptime = robot_uptime_slider.value
+        
+        # Recalculate daily_processed_weight and daily_recycling_weight here based on the new slider values
+        daily_processed_weight = robot_rate * hours_per_day * item_weight * robot_uptime * number_of_robots
+        daily_recycling_weight = daily_processed_weight * recycling_rate / 2000
+        
+        # Assuming Days is already defined or calculated previously in your application
+        daily_recycling_weight_per_month = daily_recycling_weight * Days
+        
+        # Update the data source for the plot
+        new_data = {'x': Month, 'y': daily_recycling_weight_per_month}
+        source.data = new_data
+
+    # Attach the update function to the sliders
+    robot_rate_slider.on_change('value', update)
+    number_of_robots_slider.on_change('value', update)
+    recycling_rate_slider.on_change('value', update)
+    robot_uptime_slider.on_change('value', update)
+
+    # Assuming you have a ColumnDataSource for your plot called source
+    source = ColumnDataSource(data=dict(x=[], y=[]))
+
+    # Add the plot and sliders to the document
+    layout = column(robot_rate_slider, number_of_robots_slider, recycling_rate_slider, robot_uptime_slider, Robot_Rate_Plot)
+
     # Adjusts the size of the plot and slider
-    Robot_Rate_Plot.sizing_mode = "scale_both"
+    layout.sizing_mode = "scale_both"
 
     # Rotate the x-axis labels
-    Robot_Rate_Plot.xaxis.major_label_orientation = "vertical"
-
+    layout.xaxis.major_label_orientation = "vertical"\
+    
     # Show the result
-    return Robot_Rate_Plot
+    return layout
 
 def profitability():
 

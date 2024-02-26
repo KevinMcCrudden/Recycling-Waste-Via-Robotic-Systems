@@ -7,6 +7,8 @@ import pandas as pd
 import helper as Helper
 import numpy as np
 
+# Lists all the tools that are available in bokeh
+tools_plot = ["pan", "box_select", "zoom_in", "zoom_out", "save", "reset", "help", "hover", "crosshair", "tap", "wheel_zoom"]
 
 # Initialize the class variables
 # Creates a variable to hold the csv file name
@@ -84,7 +86,7 @@ def Locations():
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
         x_range=x_range_2022,
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+        tools=tools_plot,
         
     )
 
@@ -104,7 +106,7 @@ def Locations():
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
         x_range=x_range_2023,
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+        tools=tools_plot,
         
     )
 
@@ -154,7 +156,7 @@ def Months():
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
         x_range=Month_2022,
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+        tools=tools_plot,
         
     )
 
@@ -183,7 +185,7 @@ def Months():
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
         x_range=Month_2023,
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+        tools=tools_plot,
         
     )
 
@@ -257,7 +259,7 @@ def Academic_Year():
         y_axis_label="Weight in Tons",
         x_range=Month,
         y_range=(0, 100),
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+        tools=tools_plot,
     )
 
     # Render glyphs for academic year
@@ -377,7 +379,7 @@ def Robot_Rate():
         x_axis_label="Months of the year",
         y_axis_label="Weight in Tons",
         x_range=Month,
-        tools="pan,box_select,zoom_in,zoom_out,save,reset",
+        tools=tools_plot,
     )
 
     # Creates a second y-axis
@@ -430,7 +432,7 @@ def Robot_Rate():
         
         # Update the data source for the plot
         source.data = {'x': Month, 'y': daily_recycling_weight_per_month}
-        
+
         # Update the source with new data
         source.data = dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month)
 

@@ -339,7 +339,7 @@ def Robot_Rate():
     # Variables for the caluclation
     robot_rate = 40 # Items per hour
     hours_per_day = 24 # Hours
-    item_weight = 0.5 # Pounds
+    item_weight = 0.5 # Individual item weight in pounds
     recycling_rate = 0.19 # 19% of items that can actually be recycled
     robot_uptime = 0.90 # 90% uptime
     
@@ -354,6 +354,9 @@ def Robot_Rate():
 
     # Assings the value of the column 'MONTH_STRING' to the variable Month
     Month = df['MONTH_STRING']
+
+    # Assigns the value of the column 'DAYS_IN_MONTH' to Days
+    Days = df['DAYS_IN_MONTH']
 
     # Creates plot for the robot rate
     Robot_Rate_Plot = figure(

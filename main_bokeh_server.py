@@ -449,7 +449,6 @@ def Robot_Rate():
     return layout
 
 def profitability():
-
     pass
 
 def roi():

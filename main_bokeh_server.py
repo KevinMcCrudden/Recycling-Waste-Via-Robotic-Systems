@@ -6,6 +6,7 @@ from bokeh.models import Legend, FactorRange, ColumnDataSource, DataTable, Table
 import pandas as pd
 import helper as Helper
 import numpy as np
+import random
 
 # Lists all the tools that are available in bokeh
 tools_plot = ["pan", "box_select", "zoom_in", "zoom_out", "save", "reset", "help", "hover", "crosshair", "tap", "wheel_zoom"]
@@ -415,26 +416,96 @@ def Robot_Rate():
     recycling_rate_slider = Slider(start=0.1, end=1.0, value=0.19, step=0.01, title="Recycling Rate")
     robot_uptime_slider = Slider(start=0.5, end=1.0, value=0.90, step=0.01, title="Robot Uptime")
 
-    # Define the callback function
-    def update(attr, old, new):
-        # Update variables based on sliders' values
-        robot_rate = robot_rate_slider.value
-        number_of_robots = number_of_robots_slider.value
-        recycling_rate = recycling_rate_slider.value
-        robot_uptime = robot_uptime_slider.value
+    # # Define the callback function
+    # def update(attr, old, new):
+    #     # Update variables based on sliders' values
+    #     robot_rate = robot_rate_slider.value
+    #     number_of_robots = number_of_robots_slider.value
+    #     recycling_rate = recycling_rate_slider.value
+    #     robot_uptime = robot_uptime_slider.value
         
-        # Recalculate daily_processed_weight and daily_recycling_weight here based on the new slider values
-        daily_processed_weight = robot_rate * hours_per_day * item_weight * robot_uptime * number_of_robots
-        daily_recycling_weight = daily_processed_weight * recycling_rate / 2000
+    #     # Recalculate daily_processed_weight and daily_recycling_weight here based on the new slider values
+    #     daily_processed_weight = robot_rate * hours_per_day * item_weight * robot_uptime * number_of_robots
+    #     daily_recycling_weight = daily_processed_weight * recycling_rate / 2000
         
-        # Assuming Days is already defined or calculated previously in your application
-        daily_recycling_weight_per_month = daily_recycling_weight * Days
+    #     # Assuming Days is already defined or calculated previously in your application
+    #     daily_recycling_weight_per_month = daily_recycling_weight * Days
         
-        # Update the data source for the plot
-        source.data = {'x': Month, 'y': daily_recycling_weight_per_month}
+    #     # Update the data source for the plot
+    #     source.data = {'x': Month, 'y': daily_recycling_weight_per_month}
 
-        # Update the source with new data
+    #     # Update the source with new data
+    #     source.data = dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month)
+
+    # def update(attr, old, new):
+    #     # Assuming Days, Month, and Tons are defined elsewhere in your code
+    #     daily_recycling_weight_per_month = []
+    #     leftover_weight = 0  # Start with no leftover from the previous day
+        
+    #     for day in Days:
+    #         # Use slider values directly, as they are not varying by day in this setup
+    #         robot_rate = robot_rate_slider.value
+    #         number_of_robots = number_of_robots_slider.value
+    #         recycling_rate = recycling_rate_slider.value
+    #         robot_uptime = robot_uptime_slider.value
+            
+    #         # Daily capacity calculation
+    #         daily_processed_weight = robot_rate * hours_per_day * item_weight * robot_uptime * number_of_robots
+    #         daily_recycling_capacity = daily_processed_weight * recycling_rate / pounds_per_ton
+            
+    #         # Process for each day based on capacity and leftover
+    #         # (Assuming actual daily need is equivalent to daily capacity for simplicity)
+    #         total_daily_recycling_weight = daily_recycling_capacity + leftover_weight
+    #         actual_daily_need = daily_recycling_capacity
+            
+    #         if total_daily_recycling_weight >= actual_daily_need:
+    #             daily_recycling_weight_per_month.append(actual_daily_need)
+    #             leftover_weight = total_daily_recycling_weight - actual_daily_need
+    #         else:
+    #             daily_recycling_weight_per_month.append(total_daily_recycling_weight)
+    #             leftover_weight = 0
+        
+    #     # Update plot source data here
+    #     source.data = dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month)
+
+    def update(attr, old, new):
+        # Assuming Days is the number of days in the simulation period
+        days = len(Days)
+
+        # Base values from sliders
+        base_robot_rate = robot_rate_slider.value
+        base_number_of_robots = number_of_robots_slider.value
+        base_recycling_rate = recycling_rate_slider.value
+        base_robot_uptime = robot_uptime_slider.value
+
+        daily_recycling_weight_per_month = []
+        leftover_weight = 0
+
+        for day_index in range(days):
+            # Simulate daily variations around the base values
+            robot_rate = base_robot_rate * random.uniform(0.9, 1.1)  # +/- 10% variation
+            number_of_robots = max(1, int(base_number_of_robots * random.choice([0.9, 1.1])))  # +/- 10% variation, at least 1 robot
+            recycling_rate = base_recycling_rate * random.uniform(0.9, 1.1)  # +/- 10% variation
+            robot_uptime = base_robot_uptime * random.uniform(0.9, 1.1)  # +/- 10% variation
+
+            # Daily capacity calculation
+            daily_processed_weight = robot_rate * 24 * 0.5 * robot_uptime * number_of_robots  # Assuming 24 hours and 0.5 lbs per item
+            daily_recycling_capacity = daily_processed_weight * recycling_rate / 2000  # Convert to tons
+            
+            # Calculate total recycling weight for the day, including leftovers
+            total_daily_recycling_weight = daily_recycling_capacity + leftover_weight
+            actual_daily_need = daily_recycling_capacity  # Assuming the need matches capacity
+            
+            if total_daily_recycling_weight >= actual_daily_need:
+                daily_recycling_weight_per_month.append(actual_daily_need)
+                leftover_weight = total_daily_recycling_weight - actual_daily_need
+            else:
+                daily_recycling_weight_per_month.append(total_daily_recycling_weight)
+                leftover_weight = 0  # No leftover if capacity is not met
+
+        # Update the data source for the plot with new daily recycling weights
         source.data = dict(x=Month, tons=Tons, daily_recycling_weight_per_month=daily_recycling_weight_per_month)
+
 
     # Attach the update function to the sliders
     robot_rate_slider.on_change('value', update)
